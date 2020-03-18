@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorBackground">
+
+    <LinearLayout
+        android:id="@+id/dictionaryLayout"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:background="@color/colorItemBackground">
+        <TextView
+            android:id="@+id/dictionaryWord"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity=""
+            android:layout_weight="1"
+            android:padding="15dp"
+            android:textSize="25sp"
+            android:textColor="@color/colorTextRed"
+            tools:text="Some text"/>
+
+        <TextView
+            android:id="@+id/dictionaryTranslation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="15dp"
+            android:textSize="25sp"
+            android:textColor="@color/colorTextBlue"
+            android:background="@color/colorItemDarkestBackground"
+            tools:text="Некий текст"/>
+    </LinearLayout>
+
+</LinearLayout>

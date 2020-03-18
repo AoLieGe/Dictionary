@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">Dictionary</string>
+
+    <string name="menu_add_button_title">Add word</string>
+    <string name="dictionary_add_name_hint">Type dictionary name</string>
+    <string name="dictionary_add_button_text">Add dictionary</string>
+
+    <string name="dictionary_add_from_lang_text">From lang: </string>
+    <string name="dictionary_add_to_lang_text">To lang: </string>
+
 </resources>
