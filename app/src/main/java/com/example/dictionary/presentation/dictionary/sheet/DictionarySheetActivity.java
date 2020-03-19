@@ -11,6 +11,9 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.arellomobile.mvp.MvpAppCompatActivity;
+import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.arellomobile.mvp.presenter.ProvidePresenter;
 import com.example.dictionary.R;
 import com.example.dictionary.app.DictionaryView;
 import com.example.dictionary.app.Utils;
@@ -21,17 +24,27 @@ import com.example.dictionary.presentation.dictionary.add.*;
 import com.example.dictionary.presentation.dictionary.items.*;
 import com.example.dictionary.presentation.translate.TranslateActivity;
 
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class DictionarySheetActivity extends AppCompatActivity
-        implements DictionarySheetRenderer.OnDictionaryClickListener,
+public class DictionarySheetActivity extends MvpAppCompatActivity
+        implements DictionarySheetView,
+        DictionarySheetRenderer.OnDictionaryClickListener,
         DictionarySheetRenderer.OnDictionaryLongClickListener {
 
     @BindView(R.id.dictionariesSheet)
     RecyclerView dictionariesSheet;
 
-    private DictionarySheetUseCase dictionarySheetUseCase = new MockDictionarySheetUseCaseImpl();
+    @InjectPresenter
+    DictionarySheetPresenter mPresenter;
+
+    @ProvidePresenter
+    DictionarySheetPresenter providePresenter() {
+        return new DictionarySheetPresenter(new MockDictionarySheetUseCaseImpl());
+    }
+
     private DictionarySheetRenderer renderer;
 
     @Override
@@ -44,6 +57,12 @@ public class DictionarySheetActivity extends AppCompatActivity
         initRecycler();
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mPresenter.getAll();
+    }
+
     private void initRecycler() {
         renderer = new DictionarySheetRenderer(this, this);
         LinearLayoutManager manager = new LinearLayoutManager(this, RecyclerView.VERTICAL,false);
@@ -51,14 +70,9 @@ public class DictionarySheetActivity extends AppCompatActivity
         dictionariesSheet.setHasFixedSize(true);
         dictionariesSheet.setLayoutManager(manager);
         dictionariesSheet.setAdapter(renderer);
-
-        UpdateSheet();
     }
 
-    private void UpdateSheet() {
-        renderer.setData( dictionarySheetUseCase.getAll() );
-        renderer.notifyDataSetChanged();
-    }
+
 
     private void openDictionary(DictionaryView dictionary) {
         Intent intent = new Intent(this, DictionaryItemsActivity.class);
@@ -85,9 +99,7 @@ public class DictionarySheetActivity extends AppCompatActivity
         if( resultCode == RESULT_OK ) {
             //TODO add new dictionary
             DictionaryView dictionary = data.getParcelableExtra(Utils.DICTIONARY_NEW_TAG);
-            dictionarySheetUseCase.add(dictionary);
-            UpdateSheet();
-            openDictionary(dictionary);
+            mPresenter.add(dictionary);
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -100,7 +112,12 @@ public class DictionarySheetActivity extends AppCompatActivity
 
     @Override
     public void onDictionaryLongClick(DictionaryView dictionary) {
-        dictionarySheetUseCase.delete(dictionary);
-        UpdateSheet();
+        mPresenter.delete(dictionary);
+    }
+
+    @Override
+    public void onUpdateSheet(List<DictionaryView> data) {
+        renderer.setData( data );
+        renderer.notifyDataSetChanged();
     }
 }

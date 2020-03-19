@@ -11,6 +11,9 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.arellomobile.mvp.MvpAppCompatActivity;
+import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.arellomobile.mvp.presenter.ProvidePresenter;
 import com.example.dictionary.R;
 import com.example.dictionary.app.DictionaryViewItem;
 import com.example.dictionary.app.Utils;
@@ -19,18 +22,28 @@ import com.example.dictionary.domain.dictionary.items.MockDictionaryItemUseCaseI
 import com.example.dictionary.presentation.dictionary.items.renderer.DictionaryItemRenderer;
 import com.example.dictionary.presentation.translate.TranslateActivity;
 
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class DictionaryItemsActivity extends AppCompatActivity
-implements DictionaryItemRenderer.OnDictionaryItemClickListener,
+public class DictionaryItemsActivity extends MvpAppCompatActivity
+implements DictionaryItemsView,
+        DictionaryItemRenderer.OnDictionaryItemClickListener,
         DictionaryItemRenderer.OnDictionaryItemLongClickListener {
 
     @BindView(R.id.dictionaryItemSheet)
     RecyclerView dictionaryItemSheet;
 
+    @InjectPresenter
+    DictionaryItemsPresenter mPresenter;
+
+    @ProvidePresenter
+    DictionaryItemsPresenter providePresenter() {
+        return new DictionaryItemsPresenter(new MockDictionaryItemUseCaseImpl());
+    }
+
     private DictionaryItemRenderer renderer;
-    private DictionaryItemUseCase dictionaryItemUseCase = new MockDictionaryItemUseCaseImpl();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,13 +62,12 @@ implements DictionaryItemRenderer.OnDictionaryItemClickListener,
         dictionaryItemSheet.setHasFixedSize(true);
         dictionaryItemSheet.setLayoutManager(manager);
         dictionaryItemSheet.setAdapter(renderer);
-
-        UpdateSheet();
     }
 
-    private void UpdateSheet() {
-        renderer.setData( dictionaryItemUseCase.getAll() );
-        renderer.notifyDataSetChanged();
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mPresenter.getAll();
     }
 
     @Override
@@ -79,16 +91,14 @@ implements DictionaryItemRenderer.OnDictionaryItemClickListener,
                 case Utils.TRANSLATE_ACTIVITY_REQUEST_ADD:
                     //TODO add new item to dictionary
                     DictionaryViewItem newItem = data.getParcelableExtra(Utils.TRANSLATE_RESULT_TAG);
-                    dictionaryItemUseCase.add(newItem);
-                    UpdateSheet();
+                    mPresenter.add(newItem);
                     break;
 
                 case Utils.TRANSLATE_ACTIVITY_REQUEST_EDIT:
                     //TODO edit item
                     DictionaryViewItem beforeEdit = data.getParcelableExtra(Utils.TRANSLATE_BEFORE_EDIT_TAG);
                     DictionaryViewItem afterEdit = data.getParcelableExtra(Utils.TRANSLATE_RESULT_TAG);
-                    dictionaryItemUseCase.edit(beforeEdit, afterEdit);
-                    UpdateSheet();
+                    mPresenter.edit(beforeEdit, afterEdit);
                     break;
             }
         }
@@ -105,8 +115,12 @@ implements DictionaryItemRenderer.OnDictionaryItemClickListener,
 
     @Override
     public void onDictionaryOneLongClick(DictionaryViewItem item) {
-        //TODO delete item from dictionary
-        dictionaryItemUseCase.delete(item);
-        UpdateSheet();
+        mPresenter.delete(item);
+    }
+
+    @Override
+    public void onUpdateSheet(List<DictionaryViewItem> data) {
+        renderer.setData( data );
+        renderer.notifyDataSetChanged();
     }
 }

@@ -8,6 +8,9 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.arellomobile.mvp.MvpAppCompatActivity;
+import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.arellomobile.mvp.presenter.ProvidePresenter;
 import com.example.dictionary.R;
 import com.example.dictionary.app.DictionaryView;
 import com.example.dictionary.app.Language;
@@ -18,13 +21,22 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class DictionaryAddActivity extends AppCompatActivity {
+public class DictionaryAddActivity extends MvpAppCompatActivity
+implements DictionaryAddView{
     @BindView(R.id.dictionaryName)
     EditText dictionaryName;
     @BindView(R.id.dictionaryLanguageFromSpinner)
     Spinner languageFromSpinner;
     @BindView(R.id.dictionaryLanguageToSpinner)
     Spinner languageToSpinner;
+
+    @InjectPresenter
+    DictionaryAddPresenter mPresenter;
+
+    @ProvidePresenter
+    DictionaryAddPresenter providePresenter() {
+        return new DictionaryAddPresenter();
+    }
 
     private LanguageRenderer mFromLangRenderer;
     private LanguageRenderer mToLangRenderer;
@@ -36,12 +48,11 @@ public class DictionaryAddActivity extends AppCompatActivity {
         getSupportActionBar().hide();
         ButterKnife.bind(this);
 
-
-        initLanguageRenderers();
+        initLangRenderers();
         initSpinners();
     }
 
-    private void initLanguageRenderers() {
+    private void initLangRenderers() {
         mFromLangRenderer = new LanguageRenderer(this);
         mToLangRenderer = new LanguageRenderer(this);
     }
@@ -60,16 +71,19 @@ public class DictionaryAddActivity extends AppCompatActivity {
         Language fromLang = mFromLangRenderer.getLanguage();
         Language toLang = mToLangRenderer.getLanguage();
 
-        Integer validateRes = Utils.validateAddDictionary(name, fromLang, toLang);
-        if(null !=  validateRes) {
-            Toast.makeText(this, validateRes, Toast.LENGTH_SHORT).show();
-            return;
-        }
+        mPresenter.add(name, fromLang, toLang);
+    }
 
-        //TODO add dictionary and enter to it
+    @Override
+    public void createDictionary(DictionaryView dictionary) {
         Intent intent = new Intent();
-        intent.putExtra(Utils.DICTIONARY_NEW_TAG, new DictionaryView(name, fromLang, toLang));
+        intent.putExtra(Utils.DICTIONARY_NEW_TAG, dictionary);
         setResult(RESULT_OK, intent);
         finish();
+    }
+
+    @Override
+    public void onShowErrorMsg(int msgResource) {
+        Toast.makeText(this, msgResource, Toast.LENGTH_SHORT).show();
     }
 }

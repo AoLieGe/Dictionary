@@ -7,6 +7,8 @@ import com.example.dictionary.entity.dictionary.items.provider.MockDictionaryIte
 import com.example.dictionary.entity.dictionary.sheet.DictionaryDB;
 import com.example.dictionary.entity.dictionary.sheet.provider.DictionarySheetProvider;
 import com.example.dictionary.entity.dictionary.sheet.provider.MockDictionarySheetProviderImpl;
+import com.example.dictionary.entity.translate.provider.TranslateProvider;
+import com.example.dictionary.entity.translate.provider.YandexTranslateProviderImpl;
 
 import java.util.Arrays;
 import java.util.List;
@@ -16,6 +18,7 @@ public class App extends Application {
     private static List<Language> languageList;
     private static DictionarySheetProvider dictionariesProvider;
     private static DictionaryItemProvider dictionaryItemProvider;
+    private static TranslateProvider translateProvider;
 
     @Override
     public void onCreate() {
@@ -32,6 +35,7 @@ public class App extends Application {
     private void initProviders() {
         dictionariesProvider = new MockDictionarySheetProviderImpl();
         dictionaryItemProvider = new MockDictionaryItemProviderImpl();
+        translateProvider = new YandexTranslateProviderImpl();
     }
 
     public static App getInstance() {
@@ -48,5 +52,9 @@ public class App extends Application {
 
     public DictionaryItemProvider getDictionaryItemProvider() {
         return dictionaryItemProvider;
+    }
+
+    public TranslateProvider getTranslateProvider() {
+        return translateProvider;
     }
 }
