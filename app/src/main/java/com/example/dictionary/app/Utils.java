@@ -35,7 +35,8 @@ public class Utils {
             return R.string.translate_translation_empty_msg;
         }
 
-        if (word.equals(beforeEdit.getWord()) &&
+        if (beforeEdit != null &&
+                word.equals(beforeEdit.getWord()) &&
                 translation.equals(beforeEdit.getTranslation())) {
             return R.string.translate_edit_result_same_msg;
         }

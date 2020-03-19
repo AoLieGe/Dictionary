@@ -25,12 +25,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class DictionarySheetActivity extends AppCompatActivity
-        implements DictionarySheetRenderer.OnDictionaryClickListener {
+        implements DictionarySheetRenderer.OnDictionaryClickListener,
+        DictionarySheetRenderer.OnDictionaryLongClickListener {
 
     @BindView(R.id.dictionariesSheet)
     RecyclerView dictionariesSheet;
 
     private DictionarySheetUseCase dictionarySheetUseCase = new MockDictionarySheetUseCaseImpl();
+    private DictionarySheetRenderer renderer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,15 +45,19 @@ public class DictionarySheetActivity extends AppCompatActivity
     }
 
     private void initRecycler() {
-        DictionarySheetRenderer renderer = new DictionarySheetRenderer(this);
+        renderer = new DictionarySheetRenderer(this, this);
         LinearLayoutManager manager = new LinearLayoutManager(this, RecyclerView.VERTICAL,false);
 
         dictionariesSheet.setHasFixedSize(true);
         dictionariesSheet.setLayoutManager(manager);
         dictionariesSheet.setAdapter(renderer);
 
+        UpdateSheet();
+    }
+
+    private void UpdateSheet() {
         renderer.setData( dictionarySheetUseCase.getAll() );
-        dictionariesSheet.getAdapter().notifyDataSetChanged();
+        renderer.notifyDataSetChanged();
     }
 
     private void openDictionary(DictionaryView dictionary) {
@@ -79,6 +85,8 @@ public class DictionarySheetActivity extends AppCompatActivity
         if( resultCode == RESULT_OK ) {
             //TODO add new dictionary
             DictionaryView dictionary = data.getParcelableExtra(Utils.DICTIONARY_NEW_TAG);
+            dictionarySheetUseCase.add(dictionary);
+            UpdateSheet();
             openDictionary(dictionary);
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -88,5 +96,11 @@ public class DictionarySheetActivity extends AppCompatActivity
     public void onDictionaryClick(DictionaryView dictionary) {
         //TODO open selected dictionary
         openDictionary(dictionary);
+    }
+
+    @Override
+    public void onDictionaryLongClick(DictionaryView dictionary) {
+        dictionarySheetUseCase.delete(dictionary);
+        UpdateSheet();
     }
 }

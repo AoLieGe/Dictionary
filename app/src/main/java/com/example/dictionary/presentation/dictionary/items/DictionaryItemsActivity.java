@@ -12,7 +12,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.dictionary.R;
-import com.example.dictionary.app.DictionaryView;
 import com.example.dictionary.app.DictionaryViewItem;
 import com.example.dictionary.app.Utils;
 import com.example.dictionary.domain.dictionary.items.DictionaryItemUseCase;
@@ -30,6 +29,7 @@ implements DictionaryItemRenderer.OnDictionaryItemClickListener,
     @BindView(R.id.dictionaryItemSheet)
     RecyclerView dictionaryItemSheet;
 
+    private DictionaryItemRenderer renderer;
     private DictionaryItemUseCase dictionaryItemUseCase = new MockDictionaryItemUseCaseImpl();
 
     @Override
@@ -43,15 +43,19 @@ implements DictionaryItemRenderer.OnDictionaryItemClickListener,
     }
 
     private void initRecycler() {
-        DictionaryItemRenderer renderer = new DictionaryItemRenderer(this, this);
+        renderer = new DictionaryItemRenderer(this, this);
         LinearLayoutManager manager = new LinearLayoutManager(this, RecyclerView.VERTICAL,false);
 
         dictionaryItemSheet.setHasFixedSize(true);
         dictionaryItemSheet.setLayoutManager(manager);
         dictionaryItemSheet.setAdapter(renderer);
 
+        UpdateSheet();
+    }
+
+    private void UpdateSheet() {
         renderer.setData( dictionaryItemUseCase.getAll() );
-        dictionaryItemSheet.getAdapter().notifyDataSetChanged();
+        renderer.notifyDataSetChanged();
     }
 
     @Override
@@ -75,12 +79,16 @@ implements DictionaryItemRenderer.OnDictionaryItemClickListener,
                 case Utils.TRANSLATE_ACTIVITY_REQUEST_ADD:
                     //TODO add new item to dictionary
                     DictionaryViewItem newItem = data.getParcelableExtra(Utils.TRANSLATE_RESULT_TAG);
+                    dictionaryItemUseCase.add(newItem);
+                    UpdateSheet();
                     break;
 
                 case Utils.TRANSLATE_ACTIVITY_REQUEST_EDIT:
                     //TODO edit item
                     DictionaryViewItem beforeEdit = data.getParcelableExtra(Utils.TRANSLATE_BEFORE_EDIT_TAG);
                     DictionaryViewItem afterEdit = data.getParcelableExtra(Utils.TRANSLATE_RESULT_TAG);
+                    dictionaryItemUseCase.edit(beforeEdit, afterEdit);
+                    UpdateSheet();
                     break;
             }
         }
@@ -98,5 +106,7 @@ implements DictionaryItemRenderer.OnDictionaryItemClickListener,
     @Override
     public void onDictionaryOneLongClick(DictionaryViewItem item) {
         //TODO delete item from dictionary
+        dictionaryItemUseCase.delete(item);
+        UpdateSheet();
     }
 }

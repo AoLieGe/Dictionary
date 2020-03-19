@@ -19,10 +19,12 @@ import butterknife.ButterKnife;
 
 public class DictionarySheetRenderer extends RecyclerView.Adapter<DictionarySheetRenderer.DictionarySheetHolder> {
     private List<DictionaryView> data;
-    private OnDictionaryClickListener listener;
+    private OnDictionaryClickListener clickListener;
+    private OnDictionaryLongClickListener longClickListener;
 
-    public DictionarySheetRenderer(OnDictionaryClickListener listener) {
-        this.listener = listener;
+    public DictionarySheetRenderer(OnDictionaryClickListener listener, OnDictionaryLongClickListener longClickListener) {
+        this.clickListener = listener;
+        this.longClickListener = longClickListener;
     }
 
     public void setData(List<DictionaryView> data) {
@@ -45,7 +47,11 @@ public class DictionarySheetRenderer extends RecyclerView.Adapter<DictionaryShee
         holder.to.setText(dictionary.getLangTo().toString());
         holder.separator.setText(" - ");
         holder.layout.setOnClickListener(v -> {
-            listener.onDictionaryClick(dictionary);
+            clickListener.onDictionaryClick(dictionary);
+        });
+        holder.layout.setOnLongClickListener(v -> {
+            longClickListener.onDictionaryLongClick(dictionary);
+            return true;
         });
     }
 
@@ -74,5 +80,9 @@ public class DictionarySheetRenderer extends RecyclerView.Adapter<DictionaryShee
 
     public interface OnDictionaryClickListener {
         void onDictionaryClick(DictionaryView dictionary);
+    }
+
+    public interface OnDictionaryLongClickListener {
+        void onDictionaryLongClick(DictionaryView dictionary);
     }
 }

@@ -21,6 +21,49 @@ public class MockDictionaryItemProviderImpl implements DictionaryItemProvider {
         data.add(new DictionaryItemDB(8, "Listener", "Слушатель"));
     }
 
+    private int findItemIndex(DictionaryItemDB itemToFind) {
+        int index = 0;
+        for (DictionaryItemDB item : data) {
+            if (item.getWord().equals(itemToFind.getWord()) &&
+                item.getTranslation().equals(itemToFind.getTranslation())) {
+                return index;
+            }
+            index++;
+        }
+
+        return -1;
+    }
+
+    @Override
+    public void add(DictionaryItemDB item) {
+        item.setId(data.size());
+        data.add(item);
+    }
+
+    @Override
+    public void edit(DictionaryItemDB itemToEdit, DictionaryItemDB newState) {
+        int itemIndex = findItemIndex(itemToEdit);
+
+        if(itemIndex == -1) {
+            //TODO some error?
+            return;
+        }
+        newState.setId(itemIndex);
+        data.set(itemIndex, newState);
+    }
+
+    @Override
+    public void delete(DictionaryItemDB item) {
+        int itemIndex = findItemIndex(item);
+
+        if(itemIndex == -1) {
+            //TODO some error?
+            return;
+        }
+
+        data.remove(itemIndex);
+    }
+
     @Override
     public List<DictionaryItemDB> getAll() {
         return data;
