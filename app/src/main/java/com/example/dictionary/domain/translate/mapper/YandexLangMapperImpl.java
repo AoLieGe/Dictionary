@@ -1,4 +1,4 @@
-package com.example.dictionary.domain.translate;
+package com.example.dictionary.domain.translate.mapper;
 
 import com.example.dictionary.app.Language;
 import com.example.dictionary.domain.Mapper;

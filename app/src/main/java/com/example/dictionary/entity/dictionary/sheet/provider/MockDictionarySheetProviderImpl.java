@@ -7,6 +7,8 @@ import com.example.dictionary.entity.dictionary.sheet.DictionaryDB;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Observable;
+
 public class MockDictionarySheetProviderImpl implements DictionarySheetProvider {
     private List<DictionaryDB> data;
 
@@ -48,7 +50,7 @@ public class MockDictionarySheetProviderImpl implements DictionarySheetProvider 
     }
 
     @Override
-    public List<DictionaryDB> getAll() {
-        return data;
+    public Observable<List<DictionaryDB>> getAll() {
+        return Observable.just(data);
     }
 }

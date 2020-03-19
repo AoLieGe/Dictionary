@@ -44,6 +44,7 @@ implements TranslateProvider<YandexTranslatePost> {
                 .map(this::checkResponseResult)
                 .retry()
                 .map(response -> (YandexTranslatePost) response.body())
-                .filter(response -> !response.getText().isEmpty());
+                .filter(response -> !response.getText().isEmpty())
+                .doOnNext(post -> post.setWord(word));
     }
 }

@@ -3,8 +3,8 @@ package com.example.dictionary.domain.translate;
 import com.example.dictionary.app.App;
 import com.example.dictionary.app.DictionaryViewItem;
 import com.example.dictionary.app.Language;
-import com.example.dictionary.entity.translate.YandexTranslatePost;
-import com.example.dictionary.entity.translate.provider.TranslateProvider;
+import com.example.dictionary.domain.translate.mapper.YandexLangMapperImpl;
+import com.example.dictionary.domain.translate.mapper.YandexTranslateMapperImpl;
 import com.example.dictionary.entity.translate.provider.YandexTranslateProviderImpl;
 
 import io.reactivex.Observable;

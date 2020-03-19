@@ -1,8 +1,9 @@
 package com.example.dictionary.domain.dictionary.items;
 
 import com.example.dictionary.app.App;
-import com.example.dictionary.app.DictionaryView;
 import com.example.dictionary.app.DictionaryViewItem;
+import com.example.dictionary.domain.dictionary.items.mapper.DictionaryItemDbToViewMapperImpl;
+import com.example.dictionary.domain.dictionary.items.mapper.DictionaryItemViewToDbMapperImpl;
 import com.example.dictionary.entity.dictionary.items.DictionaryItemDB;
 import com.example.dictionary.entity.dictionary.items.provider.DictionaryItemProvider;
 

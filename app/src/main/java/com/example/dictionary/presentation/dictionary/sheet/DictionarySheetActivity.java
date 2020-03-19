@@ -2,7 +2,6 @@ package com.example.dictionary.presentation.dictionary.sheet;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -17,12 +16,10 @@ import com.arellomobile.mvp.presenter.ProvidePresenter;
 import com.example.dictionary.R;
 import com.example.dictionary.app.DictionaryView;
 import com.example.dictionary.app.Utils;
-import com.example.dictionary.domain.dictionary.sheet.DictionarySheetUseCase;
-import com.example.dictionary.domain.dictionary.sheet.MockDictionarySheetUseCaseImpl;
+import com.example.dictionary.domain.dictionary.sheet.DictionarySheetUseCaseImpl;
 import com.example.dictionary.presentation.dictionary.sheet.renderer.DictionarySheetRenderer;
 import com.example.dictionary.presentation.dictionary.add.*;
 import com.example.dictionary.presentation.dictionary.items.*;
-import com.example.dictionary.presentation.translate.TranslateActivity;
 
 import java.util.List;
 
@@ -42,7 +39,7 @@ public class DictionarySheetActivity extends MvpAppCompatActivity
 
     @ProvidePresenter
     DictionarySheetPresenter providePresenter() {
-        return new DictionarySheetPresenter(new MockDictionarySheetUseCaseImpl());
+        return new DictionarySheetPresenter(new DictionarySheetUseCaseImpl());
     }
 
     private DictionarySheetRenderer renderer;

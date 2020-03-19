@@ -2,18 +2,22 @@ package com.example.dictionary.domain.dictionary.sheet;
 
 import com.example.dictionary.app.App;
 import com.example.dictionary.app.DictionaryView;
+import com.example.dictionary.domain.dictionary.sheet.mapper.DictionaryDbToViewMapperImpl;
+import com.example.dictionary.domain.dictionary.sheet.mapper.DictionaryViewToDbMapperImpl;
 import com.example.dictionary.entity.dictionary.sheet.DictionaryDB;
 import com.example.dictionary.entity.dictionary.sheet.provider.DictionarySheetProvider;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MockDictionarySheetUseCaseImpl implements DictionarySheetUseCase {
+import io.reactivex.Observable;
+
+public class DictionarySheetUseCaseImpl implements DictionarySheetUseCase {
     private DictionaryDbToViewMapperImpl dbToViewMapper;
     private DictionaryViewToDbMapperImpl viewToDbMapper;
     private DictionarySheetProvider provider;
 
-    public MockDictionarySheetUseCaseImpl() {
+    public DictionarySheetUseCaseImpl() {
         dbToViewMapper = new DictionaryDbToViewMapperImpl();
         viewToDbMapper = new DictionaryViewToDbMapperImpl();
         provider = App.getInstance().getDictionarySheetProvider();
@@ -30,8 +34,9 @@ public class MockDictionarySheetUseCaseImpl implements DictionarySheetUseCase {
     }
 
     @Override
-    public List<DictionaryView> getAll() {
-        return map(provider.getAll());
+    public Observable<List<DictionaryView>> getAll() {
+        return provider.getAll()
+                .map(this::map);
     }
 
     private List<DictionaryView> map(List<DictionaryDB> data) {

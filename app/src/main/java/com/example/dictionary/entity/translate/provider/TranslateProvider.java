@@ -1,6 +1,7 @@
 package com.example.dictionary.entity.translate.provider;
 
 import com.example.dictionary.app.Language;
+import com.example.dictionary.entity.translate.YandexTranslatePost;
 
 import io.reactivex.Observable;
 

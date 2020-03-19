@@ -1,6 +1,11 @@
 package com.example.dictionary.entity.dictionary.sheet;
 
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+@Entity
 public class DictionaryDB {
+    @PrimaryKey(autoGenerate = true)
     private Integer id;
     private String name;
     private String langFrom;

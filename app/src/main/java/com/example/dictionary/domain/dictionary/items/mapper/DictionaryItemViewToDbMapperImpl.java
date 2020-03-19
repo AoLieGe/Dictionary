@@ -1,4 +1,4 @@
-package com.example.dictionary.domain.dictionary.items;
+package com.example.dictionary.domain.dictionary.items.mapper;
 
 import com.example.dictionary.app.DictionaryViewItem;
 import com.example.dictionary.domain.Mapper;
