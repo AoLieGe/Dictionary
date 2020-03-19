@@ -7,5 +7,19 @@
 
     <string name="dictionary_add_from_lang_text">From lang: </string>
     <string name="dictionary_add_to_lang_text">To lang: </string>
+    <string name="dictionary_add_enter_name_msg">Enter dictionary name</string>
+    <string name="dictionary_add_same_lang_msg">Choose different languages</string>
+
+    <string name="dictionary_sheet_title">Dictionaries</string>
+    <string name="dictionary_items_title">Items</string>
+
+    <string name="translate_word_hint">Type word to translate</string>
+    <string name="translate_translation_hint">Use translation or type your translate</string>
+    <string name="translate_add_button_text">Add</string>
+    <string name="translate_edit_button_text">Edit</string>
+
+    <string name="translate_word_empty_msg">Enter word</string>
+    <string name="translate_translation_empty_msg">Enter translation</string>
+    <string name="translate_edit_result_same_msg">Item before edit is same with item after</string>
 
 </resources>

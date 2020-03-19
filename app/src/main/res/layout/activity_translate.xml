@@ -7,4 +7,49 @@
     android:background="@color/colorBackground"
     tools:context=".presentation.translate.TranslateActivity">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/translateWord"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="5dp"
+            android:background="@color/colorItemBackground"
+            android:hint="@string/translate_word_hint"
+            android:padding="10dp"
+            android:textColor="@color/colorTextRed"
+            android:textSize="20sp"
+            tools:text="Translate" />
+
+        <EditText
+            android:id="@+id/translateTranslation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@color/colorItemBackground"
+            android:hint="@string/translate_translation_hint"
+            android:padding="10dp"
+            android:textColor="@color/colorTextBlue"
+            android:textSize="20sp"
+            tools:text="Перевод" />
+
+        <Button
+            android:id="@+id/translateButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="6dp"
+            android:layout_marginRight="6dp"
+            android:padding="25dp"
+            android:text="@string/translate_add_button_text"
+            android:textSize="20sp" />
+
+    </LinearLayout>
+
 </LinearLayout>

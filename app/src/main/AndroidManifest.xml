@@ -10,16 +10,18 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:name=".app.App">
-        <activity android:name=".presentation.dictionary.sheet.DictionarySheet"></activity>
-        <activity android:name=".presentation.dictionary.add.DictionaryAdd">
+        <activity android:name=".presentation.dictionary.sheet.DictionarySheetActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".presentation.dictionary.add.DictionaryAddActivity">
+
+        </activity>
         <activity android:name=".presentation.translate.TranslateActivity" />
-        <activity android:name=".presentation.dictionary.one.DictionaryActivity">
+        <activity android:name=".presentation.dictionary.items.DictionaryItemsActivity">
 
         </activity>
     </application>

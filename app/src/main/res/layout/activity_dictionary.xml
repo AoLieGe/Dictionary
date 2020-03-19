@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorBackground"
-    tools:context=".presentation.dictionary.one.DictionaryActivity">
+    tools:context=".presentation.dictionary.items.DictionaryItemsActivity">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/dictionaryItemSheet"
