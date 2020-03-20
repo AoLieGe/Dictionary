@@ -7,7 +7,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.dictionary.R;
-import com.example.dictionary.app.DictionaryView;
+import com.example.dictionary.app.dictionary.SheetItem;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,40 +17,40 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class DictionarySheetRenderer extends RecyclerView.Adapter<DictionarySheetRenderer.DictionarySheetHolder> {
-    private List<DictionaryView> data;
-    private OnDictionaryClickListener clickListener;
-    private OnDictionaryLongClickListener longClickListener;
+public class SheetRenderer extends RecyclerView.Adapter<SheetRenderer.SheetHolder> {
+    private List<SheetItem> data;
+    private OnSheetClickListener clickListener;
+    private OnSheetLongClickListener longClickListener;
 
-    public DictionarySheetRenderer(OnDictionaryClickListener listener, OnDictionaryLongClickListener longClickListener) {
+    public SheetRenderer(OnSheetClickListener listener, OnSheetLongClickListener longClickListener) {
         this.clickListener = listener;
         this.longClickListener = longClickListener;
     }
 
-    public void setData(List<DictionaryView> data) {
+    public void setData(List<SheetItem> data) {
         this.data = data;
     }
 
     @NonNull
     @Override
-    public DictionarySheetHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public SheetHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.dictionaries_list_item, parent, false);
-        return new DictionarySheetHolder(view);
+                .inflate(R.layout.sheet_item, parent, false);
+        return new SheetHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull DictionarySheetHolder holder, int position) {
-        DictionaryView dictionary = data.get(position);
+    public void onBindViewHolder(@NonNull SheetHolder holder, int position) {
+        SheetItem dictionary = data.get(position);
         holder.name.setText(dictionary.getName());
         holder.from.setText(dictionary.getLangFrom().toString());
         holder.to.setText(dictionary.getLangTo().toString());
         holder.separator.setText(" - ");
         holder.layout.setOnClickListener(v -> {
-            clickListener.onDictionaryClick(dictionary);
+            clickListener.onSheetClick(dictionary);
         });
         holder.layout.setOnLongClickListener(v -> {
-            longClickListener.onDictionaryLongClick(dictionary);
+            longClickListener.onSheetLongClick(dictionary);
             return true;
         });
     }
@@ -60,7 +60,7 @@ public class DictionarySheetRenderer extends RecyclerView.Adapter<DictionaryShee
         return data.size();
     }
 
-    public class DictionarySheetHolder extends RecyclerView.ViewHolder {
+    public class SheetHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.dictionariesListLayout)
         LinearLayout layout;
         @BindView(R.id.dictionariesListName)
@@ -72,17 +72,17 @@ public class DictionarySheetRenderer extends RecyclerView.Adapter<DictionaryShee
         @BindView(R.id.dictionariesLangSeparator)
         TextView separator;
 
-        public DictionarySheetHolder(@NonNull View itemView) {
+        public SheetHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
     }
 
-    public interface OnDictionaryClickListener {
-        void onDictionaryClick(DictionaryView dictionary);
+    public interface OnSheetClickListener {
+        void onSheetClick(SheetItem dictionary);
     }
 
-    public interface OnDictionaryLongClickListener {
-        void onDictionaryLongClick(DictionaryView dictionary);
+    public interface OnSheetLongClickListener {
+        void onSheetLongClick(SheetItem dictionary);
     }
 }

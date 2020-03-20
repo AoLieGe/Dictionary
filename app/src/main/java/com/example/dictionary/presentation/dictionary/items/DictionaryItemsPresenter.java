@@ -2,35 +2,35 @@ package com.example.dictionary.presentation.dictionary.items;
 
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
-import com.example.dictionary.app.DictionaryViewItem;
-import com.example.dictionary.domain.dictionary.items.DictionaryItemUseCase;
+import com.example.dictionary.app.dictionary.Item;
+import com.example.dictionary.domain.dictionary.items.ItemUseCase;
 
 import java.util.List;
 
 @InjectViewState
 public class DictionaryItemsPresenter extends MvpPresenter<DictionaryItemsView> {
-    private DictionaryItemUseCase dictionaryItemUseCase;
+    private ItemUseCase dictionaryItemUseCase;
 
-    public DictionaryItemsPresenter(DictionaryItemUseCase dictionaryItemUseCase) {
+    public DictionaryItemsPresenter(ItemUseCase dictionaryItemUseCase) {
         this.dictionaryItemUseCase = dictionaryItemUseCase;
     }
 
     public void getAll() {
-        List<DictionaryViewItem> data = dictionaryItemUseCase.getAll();
+        List<Item> data = dictionaryItemUseCase.getAll();
         getViewState().onUpdateSheet(data);
     }
 
-    public void add(DictionaryViewItem item) {
+    public void add(Item item) {
         dictionaryItemUseCase.add(item);
         getAll();
     }
 
-    public void edit(DictionaryViewItem itemToEdit, DictionaryViewItem newState) {
+    public void edit(Item itemToEdit, Item newState) {
         dictionaryItemUseCase.edit(itemToEdit, newState);
         getAll();
     }
 
-    public void delete(DictionaryViewItem item) {
+    public void delete(Item item) {
         dictionaryItemUseCase.delete(item);
         getAll();
     }

@@ -7,42 +7,46 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.arellomobile.mvp.presenter.ProvidePresenter;
 import com.example.dictionary.R;
-import com.example.dictionary.app.DictionaryView;
+import com.example.dictionary.app.dictionary.SheetItem;
 import com.example.dictionary.app.Utils;
-import com.example.dictionary.domain.dictionary.sheet.DictionarySheetUseCaseImpl;
-import com.example.dictionary.presentation.dictionary.sheet.renderer.DictionarySheetRenderer;
+import com.example.dictionary.domain.dictionary.sheet.SheetUseCaseImpl;
+import com.example.dictionary.presentation.dictionary.sheet.renderer.SheetRenderer;
 import com.example.dictionary.presentation.dictionary.add.*;
 import com.example.dictionary.presentation.dictionary.items.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class DictionarySheetActivity extends MvpAppCompatActivity
-        implements DictionarySheetView,
-        DictionarySheetRenderer.OnDictionaryClickListener,
-        DictionarySheetRenderer.OnDictionaryLongClickListener {
+public class SheetActivity extends MvpAppCompatActivity
+        implements SheetView,
+        SheetRenderer.OnSheetClickListener,
+        SheetRenderer.OnSheetLongClickListener {
 
     @BindView(R.id.dictionariesSheet)
     RecyclerView dictionariesSheet;
 
     @InjectPresenter
-    DictionarySheetPresenter mPresenter;
+    SheetPresenter mPresenter;
 
     @ProvidePresenter
-    DictionarySheetPresenter providePresenter() {
-        return new DictionarySheetPresenter(new DictionarySheetUseCaseImpl());
+    SheetPresenter providePresenter() {
+        return new SheetPresenter(new SheetUseCaseImpl());
     }
 
-    private DictionarySheetRenderer renderer;
+    private SheetRenderer renderer;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,26 +56,26 @@ public class DictionarySheetActivity extends MvpAppCompatActivity
         ButterKnife.bind(this);
 
         initRecycler();
+        mPresenter.supplyDictionarySheet();
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        mPresenter.getAll();
+    protected void onDestroy() {
+        super.onDestroy();
+        mPresenter.unsubsribeDictionarySheet();
     }
 
     private void initRecycler() {
-        renderer = new DictionarySheetRenderer(this, this);
-        LinearLayoutManager manager = new LinearLayoutManager(this, RecyclerView.VERTICAL,false);
+        renderer = new SheetRenderer(this, this);
+        LinearLayoutManager manager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
 
+        renderer.setData(new ArrayList<>());
         dictionariesSheet.setHasFixedSize(true);
         dictionariesSheet.setLayoutManager(manager);
         dictionariesSheet.setAdapter(renderer);
     }
 
-
-
-    private void openDictionary(DictionaryView dictionary) {
+    private void openDictionary(SheetItem dictionary) {
         Intent intent = new Intent(this, DictionaryItemsActivity.class);
         intent.putExtra(Utils.DICTIONARY_OPEN_TAG, dictionary);
         startActivity(intent);
@@ -93,28 +97,43 @@ public class DictionarySheetActivity extends MvpAppCompatActivity
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if( resultCode == RESULT_OK ) {
-            //TODO add new dictionary
-            DictionaryView dictionary = data.getParcelableExtra(Utils.DICTIONARY_NEW_TAG);
-            mPresenter.add(dictionary);
+        if (resultCode == RESULT_OK) {
+            //TODO insert new dictionary
+            SheetItem dictionary = data.getParcelableExtra(Utils.DICTIONARY_NEW_TAG);
+            mPresenter.insert(dictionary);
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
-    public void onDictionaryClick(DictionaryView dictionary) {
+    public void onSheetClick(SheetItem dictionary) {
         //TODO open selected dictionary
         openDictionary(dictionary);
     }
 
     @Override
-    public void onDictionaryLongClick(DictionaryView dictionary) {
+    public void onSheetLongClick(SheetItem dictionary) {
         mPresenter.delete(dictionary);
     }
 
     @Override
-    public void onUpdateSheet(List<DictionaryView> data) {
-        renderer.setData( data );
+    public void onUpdateSheet(List<SheetItem> data) {
+        renderer.setData(data);
         renderer.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onError(Throwable e) {
+        Log.d(Utils.LOG_TAG, e.toString());
+    }
+
+    @Override
+    public void onInsertComplete() {
+        Log.d(Utils.LOG_TAG, "onInsertComplete");
+    }
+
+    @Override
+    public void onDeleteComplete() {
+        Log.d(Utils.LOG_TAG, "onDeleteComplete");
     }
 }

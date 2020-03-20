@@ -2,7 +2,6 @@ package com.example.dictionary.presentation.dictionary.items;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -15,10 +14,9 @@ import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.arellomobile.mvp.presenter.ProvidePresenter;
 import com.example.dictionary.R;
-import com.example.dictionary.app.DictionaryViewItem;
+import com.example.dictionary.app.dictionary.Item;
 import com.example.dictionary.app.Utils;
-import com.example.dictionary.domain.dictionary.items.DictionaryItemUseCase;
-import com.example.dictionary.domain.dictionary.items.MockDictionaryItemUseCaseImpl;
+import com.example.dictionary.domain.dictionary.items.MockItemUseCaseImpl;
 import com.example.dictionary.presentation.dictionary.items.renderer.DictionaryItemRenderer;
 import com.example.dictionary.presentation.translate.TranslateActivity;
 
@@ -40,7 +38,7 @@ implements DictionaryItemsView,
 
     @ProvidePresenter
     DictionaryItemsPresenter providePresenter() {
-        return new DictionaryItemsPresenter(new MockDictionaryItemUseCaseImpl());
+        return new DictionaryItemsPresenter(new MockItemUseCaseImpl());
     }
 
     private DictionaryItemRenderer renderer;
@@ -89,15 +87,15 @@ implements DictionaryItemsView,
         if( resultCode == RESULT_OK ) {
             switch (requestCode) {
                 case Utils.TRANSLATE_ACTIVITY_REQUEST_ADD:
-                    //TODO add new item to dictionary
-                    DictionaryViewItem newItem = data.getParcelableExtra(Utils.TRANSLATE_RESULT_TAG);
+                    //TODO insert new item to dictionary
+                    Item newItem = data.getParcelableExtra(Utils.TRANSLATE_RESULT_TAG);
                     mPresenter.add(newItem);
                     break;
 
                 case Utils.TRANSLATE_ACTIVITY_REQUEST_EDIT:
                     //TODO edit item
-                    DictionaryViewItem beforeEdit = data.getParcelableExtra(Utils.TRANSLATE_BEFORE_EDIT_TAG);
-                    DictionaryViewItem afterEdit = data.getParcelableExtra(Utils.TRANSLATE_RESULT_TAG);
+                    Item beforeEdit = data.getParcelableExtra(Utils.TRANSLATE_BEFORE_EDIT_TAG);
+                    Item afterEdit = data.getParcelableExtra(Utils.TRANSLATE_RESULT_TAG);
                     mPresenter.edit(beforeEdit, afterEdit);
                     break;
             }
@@ -106,7 +104,7 @@ implements DictionaryItemsView,
     }
 
     @Override
-    public void onDictionaryOneClick(DictionaryViewItem item) {
+    public void onDictionaryOneClick(Item item) {
         Intent intent = new Intent(this, TranslateActivity.class);
         intent.putExtra(Utils.TRANSLATE_MODE_TAG, Utils.TRANSLATE_EDIT_TAG);
         intent.putExtra(Utils.TRANSLATE_EDIT_TAG, item);
@@ -114,12 +112,12 @@ implements DictionaryItemsView,
     }
 
     @Override
-    public void onDictionaryOneLongClick(DictionaryViewItem item) {
+    public void onDictionaryOneLongClick(Item item) {
         mPresenter.delete(item);
     }
 
     @Override
-    public void onUpdateSheet(List<DictionaryViewItem> data) {
+    public void onUpdateSheet(List<Item> data) {
         renderer.setData( data );
         renderer.notifyDataSetChanged();
     }

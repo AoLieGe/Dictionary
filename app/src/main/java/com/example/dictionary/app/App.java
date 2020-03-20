@@ -2,15 +2,10 @@ package com.example.dictionary.app;
 
 import android.app.Application;
 
-import androidx.room.Room;
-
-import com.example.dictionary.entity.dictionary.items.provider.DictionaryItemProvider;
-import com.example.dictionary.entity.dictionary.items.provider.MockDictionaryItemProviderImpl;
-import com.example.dictionary.entity.dictionary.sheet.DictionariesDataBase;
-import com.example.dictionary.entity.dictionary.sheet.DictionaryDB;
-import com.example.dictionary.entity.dictionary.sheet.provider.DictionarySheetProvider;
-import com.example.dictionary.entity.dictionary.sheet.provider.MockDictionarySheetProviderImpl;
-import com.example.dictionary.entity.dictionary.sheet.provider.RoomDictionarySheetProviderImpl;
+import com.example.dictionary.entity.dictionary.items.provider.ItemProvider;
+import com.example.dictionary.entity.dictionary.items.provider.MockItemProviderImpl;
+import com.example.dictionary.entity.dictionary.sheet.provider.SheetProvider;
+import com.example.dictionary.entity.dictionary.sheet.provider.RoomSheetProviderImpl;
 import com.example.dictionary.entity.translate.provider.TranslateProvider;
 import com.example.dictionary.entity.translate.provider.YandexTranslateProviderImpl;
 
@@ -20,17 +15,15 @@ import java.util.List;
 public class App extends Application {
     private static App instance;
     private List<Language> languageList;
-    private DictionarySheetProvider dictionariesProvider;
-    private DictionaryItemProvider dictionaryItemProvider;
+    private SheetProvider sheetProvider;
+    private ItemProvider itemProvider;
     private TranslateProvider translateProvider;
-    private DictionariesDataBase dictionariesDB;
 
     @Override
     public void onCreate() {
         super.onCreate();
         instance = this;
         initLangList();
-        initDB();
         initProviders();
     }
 
@@ -38,16 +31,9 @@ public class App extends Application {
         languageList = Arrays.asList(Language.values());
     }
 
-    private void initDB() {
-        dictionariesDB = Room.databaseBuilder(this,
-                DictionariesDataBase.class,
-                "dictionaries")
-                .build();
-    }
-
     private void initProviders() {
-        dictionariesProvider = new RoomDictionarySheetProviderImpl();
-        dictionaryItemProvider = new MockDictionaryItemProviderImpl();
+        sheetProvider = new RoomSheetProviderImpl(getApplicationContext());
+        itemProvider = new MockItemProviderImpl();
         translateProvider = new YandexTranslateProviderImpl();
     }
 
@@ -59,19 +45,15 @@ public class App extends Application {
         return languageList;
     }
 
-    public DictionarySheetProvider getDictionarySheetProvider() {
-        return dictionariesProvider;
+    public SheetProvider getSheetProvider() {
+        return sheetProvider;
     }
 
-    public DictionaryItemProvider getDictionaryItemProvider() {
-        return dictionaryItemProvider;
+    public ItemProvider getItemProvider() {
+        return itemProvider;
     }
 
     public TranslateProvider getTranslateProvider() {
         return translateProvider;
-    }
-
-    public DictionariesDataBase getDictionariesDB() {
-        return dictionariesDB;
     }
 }

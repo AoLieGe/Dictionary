@@ -1,7 +1,5 @@
 package com.example.dictionary.presentation.dictionary.add;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.EditText;
@@ -12,7 +10,7 @@ import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.arellomobile.mvp.presenter.ProvidePresenter;
 import com.example.dictionary.R;
-import com.example.dictionary.app.DictionaryView;
+import com.example.dictionary.app.dictionary.SheetItem;
 import com.example.dictionary.app.Language;
 import com.example.dictionary.app.Utils;
 import com.example.dictionary.presentation.dictionary.add.renderer.LanguageRenderer;
@@ -75,7 +73,7 @@ implements DictionaryAddView{
     }
 
     @Override
-    public void createDictionary(DictionaryView dictionary) {
+    public void createDictionary(SheetItem dictionary) {
         Intent intent = new Intent();
         intent.putExtra(Utils.DICTIONARY_NEW_TAG, dictionary);
         setResult(RESULT_OK, intent);

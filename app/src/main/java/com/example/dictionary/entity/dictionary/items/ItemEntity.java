@@ -3,18 +3,18 @@ package com.example.dictionary.entity.dictionary.items;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class DictionaryItemDB implements Parcelable {
+public class ItemEntity implements Parcelable {
     private Integer id;
     private String word;
     private String translation;
 
-    public DictionaryItemDB(Integer id, String word, String translation) {
+    public ItemEntity(Integer id, String word, String translation) {
         this.id = id;
         this.word = word;
         this.translation = translation;
     }
 
-    private DictionaryItemDB(Parcel parcel) {
+    private ItemEntity(Parcel parcel) {
         this.id = parcel.readInt();
         this.word = parcel.readString();
         this.translation = parcel.readString();
@@ -56,15 +56,15 @@ public class DictionaryItemDB implements Parcelable {
         dest.writeString(translation);
     }
 
-    public static final Parcelable.Creator<DictionaryItemDB> CREATOR = new Parcelable.Creator<DictionaryItemDB>() {
+    public static final Parcelable.Creator<ItemEntity> CREATOR = new Parcelable.Creator<ItemEntity>() {
         @Override
-        public DictionaryItemDB createFromParcel(Parcel source) {
-            return new DictionaryItemDB(source);
+        public ItemEntity createFromParcel(Parcel source) {
+            return new ItemEntity(source);
         }
 
         @Override
-        public DictionaryItemDB[] newArray(int size) {
-            return new DictionaryItemDB[size];
+        public ItemEntity[] newArray(int size) {
+            return new ItemEntity[size];
         }
     };
 }

@@ -9,7 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.dictionary.app.DictionaryViewItem;
+import com.example.dictionary.app.dictionary.Item;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -19,7 +19,7 @@ import com.example.dictionary.R;
 import java.util.List;
 
 public class DictionaryItemRenderer extends RecyclerView.Adapter<DictionaryItemRenderer.DictionaryItemHolder> {
-    private List<DictionaryViewItem> data;
+    private List<Item> data;
     private OnDictionaryItemClickListener clickListener;
     private OnDictionaryItemLongClickListener longClickListener;
 
@@ -28,7 +28,7 @@ public class DictionaryItemRenderer extends RecyclerView.Adapter<DictionaryItemR
         this.longClickListener = longClickListener;
     }
 
-    public void setData(List<DictionaryViewItem> data) {
+    public void setData(List<Item> data) {
         this.data = data;
     }
 
@@ -42,7 +42,7 @@ public class DictionaryItemRenderer extends RecyclerView.Adapter<DictionaryItemR
 
     @Override
     public void onBindViewHolder(@NonNull DictionaryItemHolder holder, int position) {
-        DictionaryViewItem item = data.get(position);
+        Item item = data.get(position);
 
         holder.word.setText(item.getWord());
         holder.tranlation.setText(item.getTranslation());
@@ -75,11 +75,11 @@ public class DictionaryItemRenderer extends RecyclerView.Adapter<DictionaryItemR
     }
 
     public interface OnDictionaryItemClickListener {
-        void onDictionaryOneClick(DictionaryViewItem item);
+        void onDictionaryOneClick(Item item);
     }
 
     public interface OnDictionaryItemLongClickListener {
-        void onDictionaryOneLongClick(DictionaryViewItem item);
+        void onDictionaryOneLongClick(Item item);
     }
 
 }

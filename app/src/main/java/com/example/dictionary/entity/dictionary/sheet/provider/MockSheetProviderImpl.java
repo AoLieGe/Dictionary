@@ -1,25 +1,25 @@
 package com.example.dictionary.entity.dictionary.sheet.provider;
 
 import com.example.dictionary.app.Language;
-import com.example.dictionary.entity.dictionary.items.DictionaryItemDB;
-import com.example.dictionary.entity.dictionary.sheet.DictionaryDB;
+import com.example.dictionary.entity.dictionary.sheet.SheetItemEntity;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Completable;
 import io.reactivex.Observable;
 
-public class MockDictionarySheetProviderImpl implements DictionarySheetProvider {
-    private List<DictionaryDB> data;
+public class MockSheetProviderImpl implements SheetProvider {
+    private List<SheetItemEntity> data;
 
-    public MockDictionarySheetProviderImpl() {
+    public MockSheetProviderImpl() {
         data = new ArrayList<>();
-        data.add(new DictionaryDB(0, "Dic1", Language.ENGLISH.toString(), Language.RUSSIAN.toString()));
+        data.add(new SheetItemEntity(0, "Dic1", Language.ENGLISH.toString(), Language.RUSSIAN.toString()));
     }
 
-    private int findItemIndex(DictionaryDB itemToFind) {
+    private int findItemIndex(SheetItemEntity itemToFind) {
         int index = 0;
-        for (DictionaryDB item : data) {
+        for (SheetItemEntity item : data) {
             if (item.getName().equals(itemToFind.getName()) &&
                     item.getLangFrom().equals(itemToFind.getLangFrom()) &&
                     item.getLangTo().equals(itemToFind.getLangTo()) ) {
@@ -32,25 +32,28 @@ public class MockDictionarySheetProviderImpl implements DictionarySheetProvider 
     }
 
     @Override
-    public void add(DictionaryDB item) {
+    public Completable insert(SheetItemEntity item) {
         item.setId(data.size());
         data.add(item);
+
+        return Completable.complete();
     }
 
     @Override
-    public void delete(DictionaryDB item) {
+    public Completable delete(SheetItemEntity item) {
         int itemIndex = findItemIndex(item);
 
         if(itemIndex == -1) {
             //TODO some error?
-            return;
+            return Completable.error(new IllegalArgumentException());
         }
 
         data.remove(itemIndex);
+        return Completable.complete();
     }
 
     @Override
-    public Observable<List<DictionaryDB>> getAll() {
+    public Observable<List<SheetItemEntity>> getAll() {
         return Observable.just(data);
     }
 }

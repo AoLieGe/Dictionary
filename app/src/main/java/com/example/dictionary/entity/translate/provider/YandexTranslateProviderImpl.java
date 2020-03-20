@@ -26,7 +26,7 @@ implements TranslateProvider<YandexTranslatePost> {
     }
 
     private Response checkResponseResult(Response response) throws IOException {
-        //TODO add some check code
+        //TODO insert some check code
 
         if (!response.isSuccessful())
             throw new IOException("Translate response isn't successful");

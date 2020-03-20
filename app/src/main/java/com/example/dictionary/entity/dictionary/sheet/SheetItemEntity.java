@@ -4,14 +4,14 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 @Entity
-public class DictionaryDB {
+public class SheetItemEntity {
     @PrimaryKey(autoGenerate = true)
-    private Integer id;
+    private int id;
     private String name;
     private String langFrom;
     private String langTo;
 
-    public DictionaryDB(Integer id, String name, String langFrom, String langTo) {
+    public SheetItemEntity(int id, String name, String langFrom, String langTo) {
         this.id = id;
         this.name = name;
         this.langFrom = langFrom;
@@ -23,7 +23,7 @@ public class DictionaryDB {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -49,5 +49,15 @@ public class DictionaryDB {
 
     public void setLangTo(String langTo) {
         this.langTo = langTo;
+    }
+
+    @Override
+    public String toString() {
+        return "SheetItemEntity{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", langFrom='" + langFrom + '\'' +
+                ", langTo='" + langTo + '\'' +
+                '}';
     }
 }

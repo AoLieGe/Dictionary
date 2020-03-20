@@ -1,7 +1,7 @@
 package com.example.dictionary.domain.translate;
 
 import com.example.dictionary.app.App;
-import com.example.dictionary.app.DictionaryViewItem;
+import com.example.dictionary.app.dictionary.Item;
 import com.example.dictionary.app.Language;
 import com.example.dictionary.domain.translate.mapper.YandexLangMapperImpl;
 import com.example.dictionary.domain.translate.mapper.YandexTranslateMapperImpl;
@@ -21,7 +21,7 @@ public class YandexTranslateUseCaseImpl implements TranslateUseCase {
     }
 
     @Override
-    public Observable<DictionaryViewItem> translate(String word, Language langFrom, Language langTo) {
+    public Observable<Item> translate(String word, Language langFrom, Language langTo) {
         return provider.translate(
                 word,
                 langMapper.map(langFrom),

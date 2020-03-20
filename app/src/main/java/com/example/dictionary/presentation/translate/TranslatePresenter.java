@@ -1,11 +1,10 @@
 package com.example.dictionary.presentation.translate;
 
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
-import com.example.dictionary.app.DictionaryViewItem;
+import com.example.dictionary.app.dictionary.Item;
 import com.example.dictionary.app.Language;
 import com.example.dictionary.domain.translate.TranslateUseCase;
 import com.jakewharton.rxbinding2.widget.RxTextView;
@@ -49,18 +48,18 @@ public class TranslatePresenter extends MvpPresenter<TranslateView> {
         }
     }
 
-    public Observable<DictionaryViewItem> translate(String word, Language from, Language to) {
+    public Observable<Item> translate(String word, Language from, Language to) {
         return translateUseCase.translate(word, from, to);
     }
 
-    public void finishIfValidationSuccess(String word, String translation, DictionaryViewItem itemBeforeEdit) {
+    public void finishIfValidationSuccess(String word, String translation, Item itemBeforeEdit) {
         Integer validateRes = validateTranslation(word, translation, itemBeforeEdit);
         if (null != validateRes) {
             getViewState().onShowErrorMsg(validateRes);
             return;
         }
 
-        getViewState().onFinish(new DictionaryViewItem(word, translation));
+        getViewState().onFinish(new Item(word, translation));
     }
 
 }

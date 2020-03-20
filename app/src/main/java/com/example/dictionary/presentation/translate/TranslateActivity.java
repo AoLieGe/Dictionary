@@ -1,7 +1,5 @@
 package com.example.dictionary.presentation.translate;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,23 +11,15 @@ import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.arellomobile.mvp.presenter.ProvidePresenter;
 import com.example.dictionary.R;
-import com.example.dictionary.app.DictionaryView;
-import com.example.dictionary.app.DictionaryViewItem;
+import com.example.dictionary.app.dictionary.Item;
 import com.example.dictionary.app.Language;
 import com.example.dictionary.app.Utils;
 import com.example.dictionary.domain.translate.YandexTranslateUseCaseImpl;
-import com.jakewharton.rxbinding2.widget.RxTextView;
-
-import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
-
-import static com.example.dictionary.app.Utils.validateTranslation;
 
 public class TranslateActivity extends MvpAppCompatActivity
         implements TranslateView {
@@ -49,7 +39,7 @@ public class TranslateActivity extends MvpAppCompatActivity
     }
 
     private String mMode;
-    private DictionaryViewItem itemBeforeEdit;
+    private Item itemBeforeEdit;
     private Disposable editSubscriber;
 
     @Override
@@ -123,7 +113,7 @@ public class TranslateActivity extends MvpAppCompatActivity
     }
 
     @Override
-    public void onShowTranslation(DictionaryViewItem dictionaryItem) {
+    public void onShowTranslation(Item dictionaryItem) {
         translation.setText(dictionaryItem.getTranslation());
     }
 
@@ -133,7 +123,7 @@ public class TranslateActivity extends MvpAppCompatActivity
     }
 
     @Override
-    public void onFinish(DictionaryViewItem dictionaryViewItem) {
+    public void onFinish(Item dictionaryViewItem) {
         Intent intent = new Intent();
         switch (mMode) {
             case Utils.TRANSLATE_EDIT_TAG:

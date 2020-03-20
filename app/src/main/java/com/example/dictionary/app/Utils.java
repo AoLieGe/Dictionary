@@ -1,10 +1,11 @@
 package com.example.dictionary.app;
 
-import android.widget.Button;
-
 import com.example.dictionary.R;
+import com.example.dictionary.app.dictionary.Item;
 
 public class Utils {
+    public static final String LOG_TAG = "DictionaryLog";
+
     public static final int TRANSLATE_ACTIVITY_REQUEST_ADD = 1;
     public static final int TRANSLATE_ACTIVITY_REQUEST_EDIT = 2;
     public static final String TRANSLATE_MODE_TAG = "TranslateMode";
@@ -26,7 +27,7 @@ public class Utils {
         return null;
     }
 
-    public static Integer validateTranslation(String word, String translation, DictionaryViewItem beforeEdit) {
+    public static Integer validateTranslation(String word, String translation, Item beforeEdit) {
         if (word.isEmpty()) {
             return R.string.translate_word_empty_msg;
         }

@@ -1,14 +1,14 @@
 package com.example.dictionary.domain.dictionary.sheet.mapper;
 
-import com.example.dictionary.app.DictionaryView;
+import com.example.dictionary.app.dictionary.SheetItem;
 import com.example.dictionary.app.Language;
 import com.example.dictionary.domain.Mapper;
-import com.example.dictionary.entity.dictionary.sheet.DictionaryDB;
+import com.example.dictionary.entity.dictionary.sheet.SheetItemEntity;
 
-public class DictionaryDbToViewMapperImpl extends Mapper<DictionaryDB, DictionaryView> {
+public class EntityToSheetItemMapperImpl extends Mapper<SheetItemEntity, SheetItem> {
     @Override
-    protected DictionaryView mapImpl(DictionaryDB dictionaryDB) {
-        return new DictionaryView(
+    protected SheetItem mapImpl(SheetItemEntity dictionaryDB) {
+        return new SheetItem(
                 dictionaryDB.getName(),
                 Language.valueOf(dictionaryDB.getLangFrom()),
                 Language.valueOf(dictionaryDB.getLangTo())
