@@ -8,7 +8,7 @@ import io.reactivex.Completable;
 import io.reactivex.Observable;
 
 public interface SheetUseCase {
-    Completable add(SheetItem item);
+    Completable insert(SheetItem item);
     Completable delete(SheetItem item);
     Observable<List<SheetItem>> getAll();
 }

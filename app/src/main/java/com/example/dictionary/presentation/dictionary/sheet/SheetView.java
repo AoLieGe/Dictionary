@@ -6,7 +6,7 @@ import com.example.dictionary.app.dictionary.SheetItem;
 import java.util.List;
 
 public interface SheetView extends MvpView {
-    void onUpdateSheet(List<SheetItem> data);
+    void onGetSheet(List<SheetItem> data);
     void onError(Throwable e);
     void onInsertComplete();
     void onDeleteComplete();

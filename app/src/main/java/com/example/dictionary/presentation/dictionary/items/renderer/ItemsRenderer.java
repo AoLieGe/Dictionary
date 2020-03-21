@@ -18,12 +18,12 @@ import com.example.dictionary.R;
 
 import java.util.List;
 
-public class DictionaryItemRenderer extends RecyclerView.Adapter<DictionaryItemRenderer.DictionaryItemHolder> {
+public class ItemsRenderer extends RecyclerView.Adapter<ItemsRenderer.ItemHolder> {
     private List<Item> data;
-    private OnDictionaryItemClickListener clickListener;
-    private OnDictionaryItemLongClickListener longClickListener;
+    private OnItemClickListener clickListener;
+    private OnItemLongClickListener longClickListener;
 
-    public DictionaryItemRenderer(OnDictionaryItemClickListener clickListener, OnDictionaryItemLongClickListener longClickListener) {
+    public ItemsRenderer(OnItemClickListener clickListener, OnItemLongClickListener longClickListener) {
         this.clickListener = clickListener;
         this.longClickListener = longClickListener;
     }
@@ -34,23 +34,23 @@ public class DictionaryItemRenderer extends RecyclerView.Adapter<DictionaryItemR
 
     @NonNull
     @Override
-    public DictionaryItemHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ItemHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.dictionary_item, parent, false);
-        return new DictionaryItemHolder(view);
+        return new ItemHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull DictionaryItemHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ItemHolder holder, int position) {
         Item item = data.get(position);
 
         holder.word.setText(item.getWord());
         holder.tranlation.setText(item.getTranslation());
         holder.layout.setOnClickListener(v -> {
-            clickListener.onDictionaryOneClick(item);
+            clickListener.onItemClick(item);
         });
         holder.layout.setOnLongClickListener(v -> {
-            longClickListener.onDictionaryOneLongClick(item);
+            longClickListener.onItemLongClick(item);
             return true;
         });
     }
@@ -60,7 +60,7 @@ public class DictionaryItemRenderer extends RecyclerView.Adapter<DictionaryItemR
         return data.size();
     }
 
-    public class DictionaryItemHolder extends RecyclerView.ViewHolder {
+    public class ItemHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.dictionaryLayout)
         LinearLayout layout;
         @BindView(R.id.dictionaryWord)
@@ -68,18 +68,18 @@ public class DictionaryItemRenderer extends RecyclerView.Adapter<DictionaryItemR
         @BindView(R.id.dictionaryTranslation)
         TextView tranlation;
 
-        public DictionaryItemHolder(@NonNull View itemView) {
+        public ItemHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
     }
 
-    public interface OnDictionaryItemClickListener {
-        void onDictionaryOneClick(Item item);
+    public interface OnItemClickListener {
+        void onItemClick(Item item);
     }
 
-    public interface OnDictionaryItemLongClickListener {
-        void onDictionaryOneLongClick(Item item);
+    public interface OnItemLongClickListener {
+        void onItemLongClick(Item item);
     }
 
 }

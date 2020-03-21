@@ -23,7 +23,7 @@
 
         </activity>
         <activity android:name=".presentation.translate.TranslateActivity" />
-        <activity android:name=".presentation.dictionary.items.DictionaryItemsActivity">
+        <activity android:name=".presentation.dictionary.items.ItemsActivity">
 
         </activity>
     </application>

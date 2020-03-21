@@ -3,12 +3,17 @@ package com.example.dictionary.entity.dictionary.items;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+@Entity
 public class ItemEntity implements Parcelable {
-    private Integer id;
+    @PrimaryKey(autoGenerate = true)
+    private int id;
     private String word;
     private String translation;
 
-    public ItemEntity(Integer id, String word, String translation) {
+    public ItemEntity(int id, String word, String translation) {
         this.id = id;
         this.word = word;
         this.translation = translation;
@@ -20,11 +25,11 @@ public class ItemEntity implements Parcelable {
         this.translation = parcel.readString();
     }
 
-    public Integer getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(int id) {
         this.id = id;
     }
 

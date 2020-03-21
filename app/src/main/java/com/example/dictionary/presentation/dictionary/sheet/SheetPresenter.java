@@ -1,20 +1,12 @@
 package com.example.dictionary.presentation.dictionary.sheet;
 
-import android.util.Log;
-
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 import com.example.dictionary.app.dictionary.SheetItem;
 import com.example.dictionary.domain.dictionary.sheet.SheetUseCase;
 
-import java.util.List;
-import java.util.function.Function;
-
-import io.reactivex.Completable;
-import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.internal.functions.Functions;
 import io.reactivex.schedulers.Schedulers;
 
 @InjectViewState
@@ -35,7 +27,7 @@ public class SheetPresenter extends MvpPresenter<SheetView> {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        getViewState()::onUpdateSheet,
+                        getViewState()::onGetSheet,
                         getViewState()::onError
                 );
     }
@@ -54,7 +46,7 @@ public class SheetPresenter extends MvpPresenter<SheetView> {
     public void insert(SheetItem item) {
         unsubscribeSupplier(insertSupplier);
 
-        insertSupplier = sheetUseCase.add(item)
+        insertSupplier = sheetUseCase.insert(item)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(

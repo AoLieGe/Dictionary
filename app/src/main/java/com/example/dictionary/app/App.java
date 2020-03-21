@@ -2,8 +2,9 @@ package com.example.dictionary.app;
 
 import android.app.Application;
 
-import com.example.dictionary.entity.dictionary.items.provider.ItemProvider;
-import com.example.dictionary.entity.dictionary.items.provider.MockItemProviderImpl;
+import com.example.dictionary.entity.dictionary.items.provider.ItemsProvider;
+import com.example.dictionary.entity.dictionary.items.provider.MockItemsProviderImpl;
+import com.example.dictionary.entity.dictionary.items.provider.RoomItemsProviderImpl;
 import com.example.dictionary.entity.dictionary.sheet.provider.SheetProvider;
 import com.example.dictionary.entity.dictionary.sheet.provider.RoomSheetProviderImpl;
 import com.example.dictionary.entity.translate.provider.TranslateProvider;
@@ -16,7 +17,7 @@ public class App extends Application {
     private static App instance;
     private List<Language> languageList;
     private SheetProvider sheetProvider;
-    private ItemProvider itemProvider;
+    private ItemsProvider itemsProvider;
     private TranslateProvider translateProvider;
 
     @Override
@@ -33,7 +34,7 @@ public class App extends Application {
 
     private void initProviders() {
         sheetProvider = new RoomSheetProviderImpl(getApplicationContext());
-        itemProvider = new MockItemProviderImpl();
+        itemsProvider = new RoomItemsProviderImpl(getApplicationContext());
         translateProvider = new YandexTranslateProviderImpl();
     }
 
@@ -49,8 +50,8 @@ public class App extends Application {
         return sheetProvider;
     }
 
-    public ItemProvider getItemProvider() {
-        return itemProvider;
+    public ItemsProvider getItemsProvider() {
+        return itemsProvider;
     }
 
     public TranslateProvider getTranslateProvider() {

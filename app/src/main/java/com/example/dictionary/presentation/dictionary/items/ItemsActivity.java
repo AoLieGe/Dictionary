@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -16,8 +17,9 @@ import com.arellomobile.mvp.presenter.ProvidePresenter;
 import com.example.dictionary.R;
 import com.example.dictionary.app.dictionary.Item;
 import com.example.dictionary.app.Utils;
-import com.example.dictionary.domain.dictionary.items.MockItemUseCaseImpl;
-import com.example.dictionary.presentation.dictionary.items.renderer.DictionaryItemRenderer;
+import com.example.dictionary.app.dictionary.SheetItem;
+import com.example.dictionary.domain.dictionary.items.ItemsUseCaseImpl;
+import com.example.dictionary.presentation.dictionary.items.renderer.ItemsRenderer;
 import com.example.dictionary.presentation.translate.TranslateActivity;
 
 import java.util.List;
@@ -25,23 +27,23 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class DictionaryItemsActivity extends MvpAppCompatActivity
-implements DictionaryItemsView,
-        DictionaryItemRenderer.OnDictionaryItemClickListener,
-        DictionaryItemRenderer.OnDictionaryItemLongClickListener {
+public class ItemsActivity extends MvpAppCompatActivity
+implements ItemsView,
+        ItemsRenderer.OnItemClickListener,
+        ItemsRenderer.OnItemLongClickListener {
 
     @BindView(R.id.dictionaryItemSheet)
     RecyclerView dictionaryItemSheet;
 
     @InjectPresenter
-    DictionaryItemsPresenter mPresenter;
+    ItemsPresenter mPresenter;
 
     @ProvidePresenter
-    DictionaryItemsPresenter providePresenter() {
-        return new DictionaryItemsPresenter(new MockItemUseCaseImpl());
+    ItemsPresenter providePresenter() {
+        return new ItemsPresenter(new ItemsUseCaseImpl());
     }
 
-    private DictionaryItemRenderer renderer;
+    private ItemsRenderer renderer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,10 +53,19 @@ implements DictionaryItemsView,
         ButterKnife.bind(this);
 
         initRecycler();
+        mPresenter.openDb(getTableName());
+        mPresenter.supplyItemsSheet();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mPresenter.unsubscribeItemsSheet();
+        mPresenter.closeDb();
     }
 
     private void initRecycler() {
-        renderer = new DictionaryItemRenderer(this, this);
+        renderer = new ItemsRenderer(this, this);
         LinearLayoutManager manager = new LinearLayoutManager(this, RecyclerView.VERTICAL,false);
 
         dictionaryItemSheet.setHasFixedSize(true);
@@ -62,10 +73,10 @@ implements DictionaryItemsView,
         dictionaryItemSheet.setAdapter(renderer);
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mPresenter.getAll();
+    private String getTableName() {
+        Intent intent = getIntent();
+        SheetItem dictionary = intent.getParcelableExtra(Utils.DICTIONARY_OPEN_TAG);
+        return dictionary.getName();
     }
 
     @Override
@@ -87,16 +98,14 @@ implements DictionaryItemsView,
         if( resultCode == RESULT_OK ) {
             switch (requestCode) {
                 case Utils.TRANSLATE_ACTIVITY_REQUEST_ADD:
-                    //TODO insert new item to dictionary
                     Item newItem = data.getParcelableExtra(Utils.TRANSLATE_RESULT_TAG);
-                    mPresenter.add(newItem);
+                    mPresenter.insert(newItem);
                     break;
 
                 case Utils.TRANSLATE_ACTIVITY_REQUEST_EDIT:
-                    //TODO edit item
                     Item beforeEdit = data.getParcelableExtra(Utils.TRANSLATE_BEFORE_EDIT_TAG);
                     Item afterEdit = data.getParcelableExtra(Utils.TRANSLATE_RESULT_TAG);
-                    mPresenter.edit(beforeEdit, afterEdit);
+                    mPresenter.update(beforeEdit, afterEdit);
                     break;
             }
         }
@@ -104,7 +113,7 @@ implements DictionaryItemsView,
     }
 
     @Override
-    public void onDictionaryOneClick(Item item) {
+    public void onItemClick(Item item) {
         Intent intent = new Intent(this, TranslateActivity.class);
         intent.putExtra(Utils.TRANSLATE_MODE_TAG, Utils.TRANSLATE_EDIT_TAG);
         intent.putExtra(Utils.TRANSLATE_EDIT_TAG, item);
@@ -112,13 +121,33 @@ implements DictionaryItemsView,
     }
 
     @Override
-    public void onDictionaryOneLongClick(Item item) {
+    public void onItemLongClick(Item item) {
         mPresenter.delete(item);
     }
 
     @Override
-    public void onUpdateSheet(List<Item> data) {
+    public void onGetItems(List<Item> data) {
         renderer.setData( data );
         renderer.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onError(Throwable e) {
+        Log.d(Utils.LOG_TAG, e.toString());
+    }
+
+    @Override
+    public void onInsertComplete() {
+        Log.d(Utils.LOG_TAG, "onInsertComplete");
+    }
+
+    @Override
+    public void onUpdateComplete() {
+        Log.d(Utils.LOG_TAG, "onUpdateComplete");
+    }
+
+    @Override
+    public void onDeleteComplete() {
+        Log.d(Utils.LOG_TAG, "onDeleteComplete");
     }
 }

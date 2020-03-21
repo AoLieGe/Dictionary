@@ -3,7 +3,6 @@ package com.example.dictionary.domain.dictionary.sheet;
 import android.util.Log;
 
 import com.example.dictionary.app.App;
-import com.example.dictionary.app.Utils;
 import com.example.dictionary.app.dictionary.SheetItem;
 import com.example.dictionary.domain.dictionary.sheet.mapper.EntityToSheetItemMapperImpl;
 import com.example.dictionary.domain.dictionary.sheet.mapper.SheetItemToEntityMapperImpl;
@@ -28,7 +27,7 @@ public class SheetUseCaseImpl implements SheetUseCase {
     }
 
     @Override
-    public Completable add(SheetItem item) {
+    public Completable insert(SheetItem item) {
         return provider.insert(sheetItemToEntityMapper.map(item));
     }
 
@@ -40,21 +39,14 @@ public class SheetUseCaseImpl implements SheetUseCase {
     @Override
     public Observable<List<SheetItem>> getAll() {
         return provider.getAll()
-                .doOnNext(sheetItemEntities -> {
-                    for(SheetItemEntity item : sheetItemEntities) {
-                        Log.d(Utils.LOG_TAG, item.toString());
-                    }
-                })
                 .map(this::map);
     }
 
     private List<SheetItem> map(List<SheetItemEntity> data) {
-        List<SheetItem> result = new ArrayList<SheetItem>();
-
+        List<SheetItem> result = new ArrayList<>();
         for (SheetItemEntity item : data) {
             result.add( entityToSheetItemMapper.map(item) );
         }
-
         return result;
     }
 }

@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
@@ -76,7 +75,7 @@ public class SheetActivity extends MvpAppCompatActivity
     }
 
     private void openDictionary(SheetItem dictionary) {
-        Intent intent = new Intent(this, DictionaryItemsActivity.class);
+        Intent intent = new Intent(this, ItemsActivity.class);
         intent.putExtra(Utils.DICTIONARY_OPEN_TAG, dictionary);
         startActivity(intent);
     }
@@ -98,7 +97,6 @@ public class SheetActivity extends MvpAppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (resultCode == RESULT_OK) {
-            //TODO insert new dictionary
             SheetItem dictionary = data.getParcelableExtra(Utils.DICTIONARY_NEW_TAG);
             mPresenter.insert(dictionary);
         }
@@ -107,7 +105,6 @@ public class SheetActivity extends MvpAppCompatActivity
 
     @Override
     public void onSheetClick(SheetItem dictionary) {
-        //TODO open selected dictionary
         openDictionary(dictionary);
     }
 
@@ -117,7 +114,7 @@ public class SheetActivity extends MvpAppCompatActivity
     }
 
     @Override
-    public void onUpdateSheet(List<SheetItem> data) {
+    public void onGetSheet(List<SheetItem> data) {
         renderer.setData(data);
         renderer.notifyDataSetChanged();
     }
