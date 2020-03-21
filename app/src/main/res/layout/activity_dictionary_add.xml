@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorBackground"
     android:orientation="vertical"
-    tools:context=".presentation.dictionary.add.DictionaryAddActivity">
+    tools:context=".presentation.dictionary.add.AddActivity">
 
     <EditText
         android:id="@+id/dictionaryName"

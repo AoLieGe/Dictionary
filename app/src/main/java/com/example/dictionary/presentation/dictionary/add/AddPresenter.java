@@ -7,7 +7,7 @@ import com.example.dictionary.app.Language;
 import com.example.dictionary.app.Utils;
 
 @InjectViewState
-public class DictionaryAddPresenter extends MvpPresenter<DictionaryAddView> {
+public class AddPresenter extends MvpPresenter<AddView> {
 
     void add(String name, Language fromLang, Language toLang) {
         Integer validateRes = Utils.validateAddDictionary(name, fromLang, toLang);

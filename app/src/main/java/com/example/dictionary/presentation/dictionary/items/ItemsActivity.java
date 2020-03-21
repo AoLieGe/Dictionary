@@ -22,6 +22,7 @@ import com.example.dictionary.domain.dictionary.items.ItemsUseCaseImpl;
 import com.example.dictionary.presentation.dictionary.items.renderer.ItemsRenderer;
 import com.example.dictionary.presentation.translate.TranslateActivity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -68,6 +69,7 @@ implements ItemsView,
         renderer = new ItemsRenderer(this, this);
         LinearLayoutManager manager = new LinearLayoutManager(this, RecyclerView.VERTICAL,false);
 
+        renderer.setData(new ArrayList<>());
         dictionaryItemSheet.setHasFixedSize(true);
         dictionaryItemSheet.setLayoutManager(manager);
         dictionaryItemSheet.setAdapter(renderer);

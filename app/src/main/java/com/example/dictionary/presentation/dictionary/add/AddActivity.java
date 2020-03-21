@@ -19,8 +19,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class DictionaryAddActivity extends MvpAppCompatActivity
-implements DictionaryAddView{
+public class AddActivity extends MvpAppCompatActivity
+implements AddView {
     @BindView(R.id.dictionaryName)
     EditText dictionaryName;
     @BindView(R.id.dictionaryLanguageFromSpinner)
@@ -29,11 +29,11 @@ implements DictionaryAddView{
     Spinner languageToSpinner;
 
     @InjectPresenter
-    DictionaryAddPresenter mPresenter;
+    AddPresenter mPresenter;
 
     @ProvidePresenter
-    DictionaryAddPresenter providePresenter() {
-        return new DictionaryAddPresenter();
+    AddPresenter providePresenter() {
+        return new AddPresenter();
     }
 
     private LanguageRenderer mFromLangRenderer;

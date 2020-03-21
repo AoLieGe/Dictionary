@@ -88,7 +88,7 @@ public class SheetActivity extends MvpAppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        Intent intent = new Intent(this, DictionaryAddActivity.class);
+        Intent intent = new Intent(this, AddActivity.class);
         startActivityForResult(intent, 1);
 
         return super.onOptionsItemSelected(item);

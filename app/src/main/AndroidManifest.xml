@@ -19,7 +19,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".presentation.dictionary.add.DictionaryAddActivity">
+        <activity android:name=".presentation.dictionary.add.AddActivity">
 
         </activity>
         <activity android:name=".presentation.translate.TranslateActivity" />
