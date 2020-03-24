@@ -1,8 +1,8 @@
 package com.example.dictionary.domain.translate;
 
 import com.example.dictionary.app.App;
-import com.example.dictionary.app.dictionary.Item;
 import com.example.dictionary.app.Language;
+import com.example.dictionary.app.dictionary.Item;
 import com.example.dictionary.domain.translate.mapper.YandexLangMapperImpl;
 import com.example.dictionary.domain.translate.mapper.YandexTranslateMapperImpl;
 import com.example.dictionary.entity.translate.provider.YandexTranslateProviderImpl;

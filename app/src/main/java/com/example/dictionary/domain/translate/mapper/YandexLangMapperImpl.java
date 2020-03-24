@@ -15,6 +15,12 @@ public class YandexLangMapperImpl extends Mapper<Language, String> {
             case RUSSIAN:
                 result = "ru";
                 break;
+            case FRENCH:
+                result = "fr";
+                break;
+            case DEUTSCH:
+                result = "de";
+                break;
         }
 
         return result;

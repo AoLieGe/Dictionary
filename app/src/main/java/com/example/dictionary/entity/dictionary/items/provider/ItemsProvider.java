@@ -12,6 +12,7 @@ public interface ItemsProvider {
     Completable update(ItemEntity itemToEdit, ItemEntity newState);
     Completable delete(ItemEntity item);
     Observable<List<ItemEntity>> getAll();
+    void clearAll();
     void openDb(String dictionaryTableName);
     void closeDb();
 }

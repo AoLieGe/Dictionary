@@ -13,8 +13,6 @@ import com.arellomobile.mvp.presenter.ProvidePresenter;
 import com.example.dictionary.R;
 import com.example.dictionary.app.Const;
 import com.example.dictionary.app.dictionary.Item;
-import com.example.dictionary.app.Language;
-import com.example.dictionary.app.Utils;
 import com.example.dictionary.app.dictionary.SheetItem;
 import com.example.dictionary.domain.translate.YandexTranslateUseCaseImpl;
 import com.jakewharton.rxbinding2.widget.RxTextView;
@@ -43,9 +41,9 @@ public class TranslateActivity extends MvpAppCompatActivity
         return new TranslatePresenter(new YandexTranslateUseCaseImpl());
     }
 
-    private String mMode;
+    private String translateActivityMode;
     private Item itemBeforeEdit;
-    private SheetItem mParentDictionary;
+    private SheetItem parentDictionary;
     private Observable<String> textChangeSupplier;
 
     @Override
@@ -56,24 +54,18 @@ public class TranslateActivity extends MvpAppCompatActivity
         ButterKnife.bind(this);
 
         readIntent();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
         supplyTextChanges();
         mPresenter.subscribeTextChanges(textChangeSupplier,
-                mParentDictionary.getLangFrom(),
-                mParentDictionary.getLangTo());
+                parentDictionary.getLangFrom(),
+                parentDictionary.getLangTo());
     }
 
     private void readIntent() {
         Intent intent = getIntent();
-        mParentDictionary = intent.getParcelableExtra(Const.TRANSLATE_LANG_TAG);
-        mMode = intent.getStringExtra(Const.TRANSLATE_MODE_TAG);
+        parentDictionary = intent.getParcelableExtra(Const.TRANSLATE_LANG_TAG);
+        translateActivityMode = intent.getStringExtra(Const.TRANSLATE_MODE_TAG);
 
-        switch (mMode) {
+        switch (translateActivityMode) {
             case Const.TRANSLATE_EDIT_TAG:
                 button.setText(R.string.translate_edit_button_text);
 
@@ -100,6 +92,20 @@ public class TranslateActivity extends MvpAppCompatActivity
         }
     }
 
+    @Override
+    public void onFinish(Item dictionaryViewItem) {
+        Intent intent = new Intent();
+        switch (translateActivityMode) {
+            case Const.TRANSLATE_EDIT_TAG:
+                intent.putExtra(Const.TRANSLATE_BEFORE_EDIT_TAG, itemBeforeEdit);
+                break;
+        }
+
+        intent.putExtra(Const.TRANSLATE_RESULT_TAG, dictionaryViewItem);
+        setResult(RESULT_OK, intent);
+        finish();
+    }
+
     @OnClick(R.id.translateButton)
     protected void onButtonClick() {
         String word = this.word.getText().toString();
@@ -116,20 +122,6 @@ public class TranslateActivity extends MvpAppCompatActivity
     @Override
     public void onTranslationError(Throwable e) {
         Log.e("TranslateError", e.toString());
-    }
-
-    @Override
-    public void onFinish(Item dictionaryViewItem) {
-        Intent intent = new Intent();
-        switch (mMode) {
-            case Const.TRANSLATE_EDIT_TAG:
-                intent.putExtra(Const.TRANSLATE_BEFORE_EDIT_TAG, itemBeforeEdit);
-                break;
-        }
-
-        intent.putExtra(Const.TRANSLATE_RESULT_TAG, dictionaryViewItem);
-        setResult(RESULT_OK, intent);
-        finish();
     }
 
     @Override

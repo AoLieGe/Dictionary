@@ -1,7 +1,5 @@
 package com.example.dictionary.domain.dictionary.sheet;
 
-import android.util.Log;
-
 import com.example.dictionary.app.App;
 import com.example.dictionary.app.dictionary.SheetItem;
 import com.example.dictionary.domain.dictionary.sheet.mapper.EntityToSheetItemMapperImpl;
@@ -45,7 +43,7 @@ public class SheetUseCaseImpl implements SheetUseCase {
     private List<SheetItem> map(List<SheetItemEntity> data) {
         List<SheetItem> result = new ArrayList<>();
         for (SheetItemEntity item : data) {
-            result.add( entityToSheetItemMapper.map(item) );
+            result.add(entityToSheetItemMapper.map(item));
         }
         return result;
     }

@@ -6,11 +6,11 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.dictionary.R;
-import com.example.dictionary.app.dictionary.SheetItem;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.dictionary.R;
+import com.example.dictionary.app.dictionary.SheetItem;
 
 import java.util.List;
 

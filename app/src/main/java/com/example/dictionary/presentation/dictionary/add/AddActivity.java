@@ -11,9 +11,8 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.arellomobile.mvp.presenter.ProvidePresenter;
 import com.example.dictionary.R;
 import com.example.dictionary.app.Const;
-import com.example.dictionary.app.dictionary.SheetItem;
 import com.example.dictionary.app.Language;
-import com.example.dictionary.app.Utils;
+import com.example.dictionary.app.dictionary.SheetItem;
 import com.example.dictionary.presentation.dictionary.add.renderer.LanguageRenderer;
 
 import butterknife.BindView;
@@ -21,7 +20,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class AddActivity extends MvpAppCompatActivity
-implements AddView {
+        implements AddView {
     @BindView(R.id.dictionaryName)
     EditText dictionaryName;
     @BindView(R.id.dictionaryLanguageFromSpinner)
@@ -30,15 +29,15 @@ implements AddView {
     Spinner languageToSpinner;
 
     @InjectPresenter
-    AddPresenter mPresenter;
+    AddPresenter presenter;
 
     @ProvidePresenter
     AddPresenter providePresenter() {
         return new AddPresenter();
     }
 
-    private LanguageRenderer mFromLangRenderer;
-    private LanguageRenderer mToLangRenderer;
+    private LanguageRenderer fromLangRenderer;
+    private LanguageRenderer toLangRenderer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,25 +51,25 @@ implements AddView {
     }
 
     private void initLangRenderers() {
-        mFromLangRenderer = new LanguageRenderer(this);
-        mToLangRenderer = new LanguageRenderer(this);
+        fromLangRenderer = new LanguageRenderer(this);
+        toLangRenderer = new LanguageRenderer(this);
     }
 
     private void initSpinners() {
-        languageFromSpinner.setAdapter(mFromLangRenderer.getAdapter());
-        languageFromSpinner.setOnItemSelectedListener(mFromLangRenderer);
+        languageFromSpinner.setAdapter(fromLangRenderer.getAdapter());
+        languageFromSpinner.setOnItemSelectedListener(fromLangRenderer);
 
-        languageToSpinner.setAdapter(mToLangRenderer.getAdapter());
-        languageToSpinner.setOnItemSelectedListener(mToLangRenderer);
+        languageToSpinner.setAdapter(toLangRenderer.getAdapter());
+        languageToSpinner.setOnItemSelectedListener(toLangRenderer);
     }
 
     @OnClick(R.id.dictionaryAddButton)
     protected void onAddButtonClick() {
         String name = dictionaryName.getText().toString();
-        Language fromLang = mFromLangRenderer.getLanguage();
-        Language toLang = mToLangRenderer.getLanguage();
+        Language fromLang = fromLangRenderer.getLanguage();
+        Language toLang = toLangRenderer.getLanguage();
 
-        mPresenter.add(name, fromLang, toLang);
+        presenter.add(name, fromLang, toLang);
     }
 
     @Override

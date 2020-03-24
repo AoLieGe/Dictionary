@@ -1,8 +1,5 @@
 package com.example.dictionary.entity.translate.provider;
 
-import android.util.Log;
-
-import com.example.dictionary.app.Utils;
 import com.example.dictionary.entity.translate.YandexTranslatePost;
 
 import io.reactivex.Observable;

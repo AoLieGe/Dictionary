@@ -65,6 +65,11 @@ public class MockItemsProviderImpl implements ItemsProvider {
     }
 
     @Override
+    public void clearAll() {
+        data.clear();
+    }
+
+    @Override
     public void openDb(String dictionaryTableName) {
         data.add(new ItemEntity(0, "Bird", "Птица"));
         data.add(new ItemEntity(1, "Word", "Слово"));

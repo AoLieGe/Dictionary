@@ -2,21 +2,16 @@ package com.example.dictionary.entity.dictionary.sheet.provider;
 
 import android.content.Context;
 
-import androidx.room.EmptyResultSetException;
 import androidx.room.Room;
 
 import com.example.dictionary.entity.dictionary.sheet.SheetDB;
 import com.example.dictionary.entity.dictionary.sheet.SheetItemEntity;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.Single;
-import io.reactivex.functions.BiFunction;
-import io.reactivex.functions.Function;
-import io.reactivex.schedulers.Schedulers;
 
 public class RoomSheetProviderImpl implements SheetProvider {
     private final SheetDB db;

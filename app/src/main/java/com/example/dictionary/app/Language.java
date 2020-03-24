@@ -1,5 +1,5 @@
 package com.example.dictionary.app;
 
 public enum Language {
-    RUSSIAN, ENGLISH
+    RUSSIAN, ENGLISH, FRENCH, DEUTSCH
 }

@@ -7,7 +7,10 @@ import java.util.List;
 
 public interface SheetView extends MvpView {
     void onGetSheet(List<SheetItem> data);
+
     void onError(Throwable e);
+
     void onInsertComplete();
+
     void onDeleteComplete();
 }

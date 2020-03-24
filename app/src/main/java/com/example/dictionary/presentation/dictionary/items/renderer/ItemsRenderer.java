@@ -9,14 +9,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.dictionary.R;
 import com.example.dictionary.app.dictionary.Item;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import com.example.dictionary.R;
-
-import java.util.List;
 
 public class ItemsRenderer extends RecyclerView.Adapter<ItemsRenderer.ItemHolder> {
     private List<Item> data;

@@ -5,8 +5,6 @@ import com.arellomobile.mvp.MvpPresenter;
 import com.example.dictionary.app.dictionary.Item;
 import com.example.dictionary.domain.dictionary.items.ItemsUseCase;
 
-import java.util.List;
-
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
@@ -19,20 +17,27 @@ public class ItemsPresenter extends MvpPresenter<ItemsView> {
     private Disposable updateSupplier;
     private Disposable deleteSupplier;
 
-    public ItemsPresenter(ItemsUseCase itemsUseCase) {
+    ItemsPresenter(ItemsUseCase itemsUseCase) {
         this.itemsUseCase = itemsUseCase;
     }
 
-    public void openDb(String dictionaryTableName) {
+    @Override
+    public void onDestroy() {
+        disposeItemsSheet();
+        closeDb();
+        super.onDestroy();
+    }
+
+    void openDb(String dictionaryTableName) {
         itemsUseCase.openDb(dictionaryTableName);
     }
 
-    public void closeDb() {
+    void closeDb() {
         itemsUseCase.closeDb();
     }
 
-    public void supplyItemsSheet() {
-        unsubscribeItemsSheet();
+    void supplyItemsSheet() {
+        disposeItemsSheet();
 
         itemsSupplier = itemsUseCase.getAll()
                 .subscribeOn(Schedulers.io())
@@ -43,19 +48,19 @@ public class ItemsPresenter extends MvpPresenter<ItemsView> {
                 );
     }
 
-    public void unsubscribeItemsSheet() {
-        unsubscribeSupplier(itemsSupplier);
+    void disposeItemsSheet() {
+        disposeSupplier(itemsSupplier);
     }
 
-    private void unsubscribeSupplier(Disposable supplier) {
-        if(supplier != null && !supplier.isDisposed()) {
+    private void disposeSupplier(Disposable supplier) {
+        if (supplier != null && !supplier.isDisposed()) {
             supplier.dispose();
             supplier = null;
         }
     }
 
     public void insert(Item item) {
-        unsubscribeSupplier(insertSupplier);
+        disposeSupplier(insertSupplier);
 
         insertSupplier = itemsUseCase.insert(item)
                 .subscribeOn(Schedulers.io())
@@ -67,7 +72,7 @@ public class ItemsPresenter extends MvpPresenter<ItemsView> {
     }
 
     public void update(Item itemToEdit, Item newState) {
-        unsubscribeSupplier(updateSupplier);
+        disposeSupplier(updateSupplier);
 
         updateSupplier = itemsUseCase.update(itemToEdit, newState)
                 .subscribeOn(Schedulers.io())
@@ -79,7 +84,7 @@ public class ItemsPresenter extends MvpPresenter<ItemsView> {
     }
 
     public void delete(Item item) {
-        unsubscribeSupplier(deleteSupplier);
+        disposeSupplier(deleteSupplier);
 
         deleteSupplier = itemsUseCase.delete(item)
                 .subscribeOn(Schedulers.io())

@@ -28,6 +28,10 @@ public class RoomItemsProviderImpl implements ItemsProvider {
                 .build();
     }
 
+    public void clearAll() {
+        db.clearAllTables();
+    }
+
     @Override
     public void closeDb() {
         if(db != null && db.isOpen()) {

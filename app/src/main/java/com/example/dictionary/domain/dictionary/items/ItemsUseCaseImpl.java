@@ -32,6 +32,11 @@ public class ItemsUseCaseImpl implements ItemsUseCase {
     }
 
     @Override
+    public void clearAll() {
+        provider.clearAll();
+    }
+
+    @Override
     public void closeDb() {
         provider.closeDb();
     }
@@ -60,6 +65,7 @@ public class ItemsUseCaseImpl implements ItemsUseCase {
                 .map(this::map)
                 .map(this::sort);
     }
+
 
     private List<Item> map(List<ItemEntity> data) {
         List<Item> result = new ArrayList<>();

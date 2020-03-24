@@ -1,15 +1,15 @@
 package com.example.dictionary.presentation.dictionary.items;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
@@ -17,7 +17,6 @@ import com.arellomobile.mvp.presenter.ProvidePresenter;
 import com.example.dictionary.R;
 import com.example.dictionary.app.Const;
 import com.example.dictionary.app.dictionary.Item;
-import com.example.dictionary.app.Utils;
 import com.example.dictionary.app.dictionary.SheetItem;
 import com.example.dictionary.domain.dictionary.items.ItemsUseCaseImpl;
 import com.example.dictionary.presentation.dictionary.items.renderer.ItemsRenderer;
@@ -38,7 +37,7 @@ public class ItemsActivity extends MvpAppCompatActivity
     RecyclerView dictionaryItemSheet;
 
     @InjectPresenter
-    ItemsPresenter mPresenter;
+    ItemsPresenter presenter;
 
     @ProvidePresenter
     ItemsPresenter providePresenter() {
@@ -57,30 +56,23 @@ public class ItemsActivity extends MvpAppCompatActivity
 
         getParentDictionary();
         initRecycler();
-        mPresenter.openDb(mParentDictionary.getName());
-        mPresenter.supplyItemsSheet();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mPresenter.unsubscribeItemsSheet();
-        mPresenter.closeDb();
-    }
-
-    private void initRecycler() {
-        mRenderer = new ItemsRenderer(this, this);
-        LinearLayoutManager manager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
-
-        mRenderer.setData(new ArrayList<>());
-        dictionaryItemSheet.setHasFixedSize(true);
-        dictionaryItemSheet.setLayoutManager(manager);
-        dictionaryItemSheet.setAdapter(mRenderer);
+        presenter.openDb(mParentDictionary.getName());
+        presenter.supplyItemsSheet();
     }
 
     private void getParentDictionary() {
         Intent intent = getIntent();
         mParentDictionary = intent.getParcelableExtra(Const.DICTIONARY_OPEN_TAG);
+    }
+
+    private void initRecycler() {
+        mRenderer = new ItemsRenderer(this, this);
+        LinearLayoutManager manager = new LinearLayoutManager(this);
+
+        mRenderer.setData(new ArrayList<>());
+        dictionaryItemSheet.setHasFixedSize(true);
+        dictionaryItemSheet.setLayoutManager(manager);
+        dictionaryItemSheet.setAdapter(mRenderer);
     }
 
     @Override
@@ -123,13 +115,13 @@ public class ItemsActivity extends MvpAppCompatActivity
             switch (requestCode) {
                 case Const.TRANSLATE_ACTIVITY_REQUEST_ADD:
                     Item newItem = data.getParcelableExtra(Const.TRANSLATE_RESULT_TAG);
-                    mPresenter.insert(newItem);
+                    presenter.insert(newItem);
                     break;
 
                 case Const.TRANSLATE_ACTIVITY_REQUEST_EDIT:
                     Item beforeEdit = data.getParcelableExtra(Const.TRANSLATE_BEFORE_EDIT_TAG);
                     Item afterEdit = data.getParcelableExtra(Const.TRANSLATE_RESULT_TAG);
-                    mPresenter.update(beforeEdit, afterEdit);
+                    presenter.update(beforeEdit, afterEdit);
                     break;
             }
         }
@@ -143,7 +135,7 @@ public class ItemsActivity extends MvpAppCompatActivity
 
     @Override
     public void onItemLongClick(Item item) {
-        mPresenter.delete(item);
+        presenter.delete(item);
     }
 
     @Override

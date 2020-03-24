@@ -15,19 +15,18 @@ import static com.example.dictionary.app.Utils.validateTranslation;
 
 @InjectViewState
 public class TranslatePresenter extends MvpPresenter<TranslateView> {
-    private TranslateUseCase mTranslateUseCase;
-    private Disposable mTextChangesSubscriber;
+    private TranslateUseCase translateUseCase;
+    private Disposable textChangesSubscriber;
 
-
-    public TranslatePresenter(TranslateUseCase translateUseCase) {
-        this.mTranslateUseCase = translateUseCase;
+    TranslatePresenter(TranslateUseCase translateUseCase) {
+        this.translateUseCase = translateUseCase;
     }
 
-    public void subscribeTextChanges(Observable<String> textChangeSupplier, Language langFrom, Language langTo) {
+    void subscribeTextChanges(Observable<String> textChangeSupplier, Language langFrom, Language langTo) {
         disposeTextChanges();
 
-        mTextChangesSubscriber = textChangeSupplier
-                .switchMap(s -> mTranslateUseCase.translate(s, langFrom, langTo))
+        textChangesSubscriber = textChangeSupplier
+                .switchMap(s -> translateUseCase.translate(s, langFrom, langTo))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(getViewState()::onShowTranslation,
@@ -37,18 +36,17 @@ public class TranslatePresenter extends MvpPresenter<TranslateView> {
     @Override
     public void onDestroy() {
         disposeTextChanges();
-
         super.onDestroy();
     }
 
     private void disposeTextChanges() {
-        if(mTextChangesSubscriber != null && !mTextChangesSubscriber.isDisposed()) {
-            mTextChangesSubscriber.dispose();
+        if (textChangesSubscriber != null && !textChangesSubscriber.isDisposed()) {
+            textChangesSubscriber.dispose();
         }
     }
 
     public Observable<Item> translate(String word, Language from, Language to) {
-        return mTranslateUseCase.translate(word, from, to);
+        return translateUseCase.translate(word, from, to);
     }
 
     public void finishIfValidationSuccess(String word, String translation, Item itemBeforeEdit) {
@@ -60,5 +58,4 @@ public class TranslatePresenter extends MvpPresenter<TranslateView> {
 
         getViewState().onFinish(new Item(word, translation));
     }
-
 }

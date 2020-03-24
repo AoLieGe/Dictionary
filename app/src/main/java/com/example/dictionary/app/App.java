@@ -3,10 +3,9 @@ package com.example.dictionary.app;
 import android.app.Application;
 
 import com.example.dictionary.entity.dictionary.items.provider.ItemsProvider;
-import com.example.dictionary.entity.dictionary.items.provider.MockItemsProviderImpl;
 import com.example.dictionary.entity.dictionary.items.provider.RoomItemsProviderImpl;
-import com.example.dictionary.entity.dictionary.sheet.provider.SheetProvider;
 import com.example.dictionary.entity.dictionary.sheet.provider.RoomSheetProviderImpl;
+import com.example.dictionary.entity.dictionary.sheet.provider.SheetProvider;
 import com.example.dictionary.entity.translate.provider.TranslateProvider;
 import com.example.dictionary.entity.translate.provider.YandexTranslateProviderImpl;
 

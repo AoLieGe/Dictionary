@@ -9,9 +9,16 @@ import io.reactivex.Observable;
 
 public interface ItemsUseCase {
     void openDb(String dictionaryTableName);
+
     void closeDb();
+
     Completable insert(Item item);
+
     Completable update(Item itemToEdit, Item newState);
+
     Completable delete(Item item);
+
     Observable<List<Item>> getAll();
+
+    void clearAll();
 }
