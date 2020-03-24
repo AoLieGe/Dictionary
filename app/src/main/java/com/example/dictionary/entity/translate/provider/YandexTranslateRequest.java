@@ -9,7 +9,7 @@ import retrofit2.http.Query;
 
 public interface YandexTranslateRequest {
     @GET("/api/v1.5/tr.json/translate")
-    Call<YandexTranslatePost> getTranslation(@Query("key") String apiKey,
+    Observable<YandexTranslatePost> getTranslation(@Query("key") String apiKey,
                                              @Query("text") String textToTranslate,
                                              @Query("lang") String lang);
 }

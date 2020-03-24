@@ -11,15 +11,20 @@ import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.arellomobile.mvp.presenter.ProvidePresenter;
 import com.example.dictionary.R;
+import com.example.dictionary.app.Const;
 import com.example.dictionary.app.dictionary.Item;
 import com.example.dictionary.app.Language;
 import com.example.dictionary.app.Utils;
+import com.example.dictionary.app.dictionary.SheetItem;
 import com.example.dictionary.domain.translate.YandexTranslateUseCaseImpl;
+import com.jakewharton.rxbinding2.widget.RxTextView;
+
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.reactivex.disposables.Disposable;
+import io.reactivex.Observable;
 
 public class TranslateActivity extends MvpAppCompatActivity
         implements TranslateView {
@@ -40,7 +45,8 @@ public class TranslateActivity extends MvpAppCompatActivity
 
     private String mMode;
     private Item itemBeforeEdit;
-    private Disposable editSubscriber;
+    private SheetItem mParentDictionary;
+    private Observable<String> textChangeSupplier;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,54 +61,44 @@ public class TranslateActivity extends MvpAppCompatActivity
     @Override
     protected void onStart() {
         super.onStart();
-        mPresenter.subscribeViewTextChangesOnTranslation(word, Language.ENGLISH, Language.RUSSIAN);
-    }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        mPresenter.unsubscribeViewTextChangesOnTranslation();
+        supplyTextChanges();
+        mPresenter.subscribeTextChanges(textChangeSupplier,
+                mParentDictionary.getLangFrom(),
+                mParentDictionary.getLangTo());
     }
 
     private void readIntent() {
         Intent intent = getIntent();
-        mMode = intent.getStringExtra(Utils.TRANSLATE_MODE_TAG);
+        mParentDictionary = intent.getParcelableExtra(Const.TRANSLATE_LANG_TAG);
+        mMode = intent.getStringExtra(Const.TRANSLATE_MODE_TAG);
 
         switch (mMode) {
-            case Utils.TRANSLATE_EDIT_TAG:
+            case Const.TRANSLATE_EDIT_TAG:
                 button.setText(R.string.translate_edit_button_text);
 
-                itemBeforeEdit = getIntent().getParcelableExtra(Utils.TRANSLATE_EDIT_TAG);
+                itemBeforeEdit = getIntent().getParcelableExtra(Const.TRANSLATE_EDIT_TAG);
                 word.setText(itemBeforeEdit.getWord());
                 translation.setText(itemBeforeEdit.getTranslation());
                 break;
 
-            case Utils.TRANSLATE_ADD_TAG:
+            case Const.TRANSLATE_ADD_TAG:
                 button.setText(R.string.translate_add_button_text);
 
                 itemBeforeEdit = null;
                 break;
         }
     }
-/*
+
     private void supplyTextChanges() {
-        unsubscibe();
-
-        editSubscriber = RxTextView.textChanges(word)
-                .debounce(500, TimeUnit.MILLISECONDS)
-                .map(CharSequence::toString)
-                .filter(s -> !s.isEmpty())
-                .observeOn(Schedulers.io())
-                .switchMap(s -> mPresenter.translate(s, Language.ENGLISH, Language.RUSSIAN))
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe();
-    }
-
-    private void unsubscibe() {
-        if(editSubscriber != null && !editSubscriber.isDisposed()) {
-            editSubscriber.dispose();
+        if (textChangeSupplier == null) {
+            textChangeSupplier = RxTextView.textChanges(word)
+                    .skip(1)
+                    .debounce(500, TimeUnit.MILLISECONDS)
+                    .map(CharSequence::toString)
+                    .filter(s -> !s.isEmpty());
         }
-    }*/
+    }
 
     @OnClick(R.id.translateButton)
     protected void onButtonClick() {
@@ -126,12 +122,12 @@ public class TranslateActivity extends MvpAppCompatActivity
     public void onFinish(Item dictionaryViewItem) {
         Intent intent = new Intent();
         switch (mMode) {
-            case Utils.TRANSLATE_EDIT_TAG:
-                intent.putExtra(Utils.TRANSLATE_BEFORE_EDIT_TAG, itemBeforeEdit);
+            case Const.TRANSLATE_EDIT_TAG:
+                intent.putExtra(Const.TRANSLATE_BEFORE_EDIT_TAG, itemBeforeEdit);
                 break;
         }
 
-        intent.putExtra(Utils.TRANSLATE_RESULT_TAG, dictionaryViewItem);
+        intent.putExtra(Const.TRANSLATE_RESULT_TAG, dictionaryViewItem);
         setResult(RESULT_OK, intent);
         finish();
     }

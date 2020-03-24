@@ -1,15 +1,10 @@
 package com.example.dictionary.presentation.translate;
 
-import android.widget.TextView;
-
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
-import com.example.dictionary.app.dictionary.Item;
 import com.example.dictionary.app.Language;
+import com.example.dictionary.app.dictionary.Item;
 import com.example.dictionary.domain.translate.TranslateUseCase;
-import com.jakewharton.rxbinding2.widget.RxTextView;
-
-import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -20,36 +15,40 @@ import static com.example.dictionary.app.Utils.validateTranslation;
 
 @InjectViewState
 public class TranslatePresenter extends MvpPresenter<TranslateView> {
-    private TranslateUseCase translateUseCase;
-    private Disposable mViewTextChangesSubscription;
+    private TranslateUseCase mTranslateUseCase;
+    private Disposable mTextChangesSubscriber;
 
 
     public TranslatePresenter(TranslateUseCase translateUseCase) {
-        this.translateUseCase = translateUseCase;
+        this.mTranslateUseCase = translateUseCase;
     }
 
-    public void subscribeViewTextChangesOnTranslation(TextView view, Language langFrom, Language langTo) {
-        unsubscribeViewTextChangesOnTranslation();
+    public void subscribeTextChanges(Observable<String> textChangeSupplier, Language langFrom, Language langTo) {
+        disposeTextChanges();
 
-        mViewTextChangesSubscription = RxTextView.textChanges(view)
-                .debounce(500, TimeUnit.MILLISECONDS)
-                .map(CharSequence::toString)
-                .filter(s -> !s.isEmpty())
-                .observeOn(Schedulers.io())
-                .switchMap(s -> translateUseCase.translate(s, langFrom, langTo))
+        mTextChangesSubscriber = textChangeSupplier
+                .switchMap(s -> mTranslateUseCase.translate(s, langFrom, langTo))
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(getViewState()::onShowTranslation,
                         getViewState()::onTranslationError);
     }
 
-    public void unsubscribeViewTextChangesOnTranslation() {
-        if(mViewTextChangesSubscription != null && !mViewTextChangesSubscription.isDisposed()) {
-            mViewTextChangesSubscription.dispose();
+    @Override
+    public void onDestroy() {
+        disposeTextChanges();
+
+        super.onDestroy();
+    }
+
+    private void disposeTextChanges() {
+        if(mTextChangesSubscriber != null && !mTextChangesSubscriber.isDisposed()) {
+            mTextChangesSubscriber.dispose();
         }
     }
 
     public Observable<Item> translate(String word, Language from, Language to) {
-        return translateUseCase.translate(word, from, to);
+        return mTranslateUseCase.translate(word, from, to);
     }
 
     public void finishIfValidationSuccess(String word, String translation, Item itemBeforeEdit) {

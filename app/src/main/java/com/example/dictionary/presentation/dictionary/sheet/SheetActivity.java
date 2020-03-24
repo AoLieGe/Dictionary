@@ -15,6 +15,7 @@ import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.arellomobile.mvp.presenter.ProvidePresenter;
 import com.example.dictionary.R;
+import com.example.dictionary.app.Const;
 import com.example.dictionary.app.dictionary.SheetItem;
 import com.example.dictionary.app.Utils;
 import com.example.dictionary.domain.dictionary.sheet.SheetUseCaseImpl;
@@ -76,7 +77,7 @@ public class SheetActivity extends MvpAppCompatActivity
 
     private void openDictionary(SheetItem dictionary) {
         Intent intent = new Intent(this, ItemsActivity.class);
-        intent.putExtra(Utils.DICTIONARY_OPEN_TAG, dictionary);
+        intent.putExtra(Const.DICTIONARY_OPEN_TAG, dictionary);
         startActivity(intent);
     }
 
@@ -97,7 +98,7 @@ public class SheetActivity extends MvpAppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (resultCode == RESULT_OK) {
-            SheetItem dictionary = data.getParcelableExtra(Utils.DICTIONARY_NEW_TAG);
+            SheetItem dictionary = data.getParcelableExtra(Const.DICTIONARY_NEW_TAG);
             mPresenter.insert(dictionary);
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -121,16 +122,16 @@ public class SheetActivity extends MvpAppCompatActivity
 
     @Override
     public void onError(Throwable e) {
-        Log.d(Utils.LOG_TAG, e.toString());
+        Log.d(Const.LOG_TAG, e.toString());
     }
 
     @Override
     public void onInsertComplete() {
-        Log.d(Utils.LOG_TAG, "onInsertComplete");
+        Log.d(Const.LOG_TAG, "onInsertComplete");
     }
 
     @Override
     public void onDeleteComplete() {
-        Log.d(Utils.LOG_TAG, "onDeleteComplete");
+        Log.d(Const.LOG_TAG, "onDeleteComplete");
     }
 }

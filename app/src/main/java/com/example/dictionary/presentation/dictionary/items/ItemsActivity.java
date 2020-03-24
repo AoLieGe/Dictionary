@@ -15,6 +15,7 @@ import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.arellomobile.mvp.presenter.ProvidePresenter;
 import com.example.dictionary.R;
+import com.example.dictionary.app.Const;
 import com.example.dictionary.app.dictionary.Item;
 import com.example.dictionary.app.Utils;
 import com.example.dictionary.app.dictionary.SheetItem;
@@ -29,7 +30,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class ItemsActivity extends MvpAppCompatActivity
-implements ItemsView,
+        implements ItemsView,
         ItemsRenderer.OnItemClickListener,
         ItemsRenderer.OnItemLongClickListener {
 
@@ -44,7 +45,8 @@ implements ItemsView,
         return new ItemsPresenter(new ItemsUseCaseImpl());
     }
 
-    private ItemsRenderer renderer;
+    private ItemsRenderer mRenderer;
+    private SheetItem mParentDictionary;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,8 +55,9 @@ implements ItemsView,
         getSupportActionBar().setTitle(R.string.dictionary_items_title);
         ButterKnife.bind(this);
 
+        getParentDictionary();
         initRecycler();
-        mPresenter.openDb(getTableName());
+        mPresenter.openDb(mParentDictionary.getName());
         mPresenter.supplyItemsSheet();
     }
 
@@ -66,19 +69,18 @@ implements ItemsView,
     }
 
     private void initRecycler() {
-        renderer = new ItemsRenderer(this, this);
-        LinearLayoutManager manager = new LinearLayoutManager(this, RecyclerView.VERTICAL,false);
+        mRenderer = new ItemsRenderer(this, this);
+        LinearLayoutManager manager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
 
-        renderer.setData(new ArrayList<>());
+        mRenderer.setData(new ArrayList<>());
         dictionaryItemSheet.setHasFixedSize(true);
         dictionaryItemSheet.setLayoutManager(manager);
-        dictionaryItemSheet.setAdapter(renderer);
+        dictionaryItemSheet.setAdapter(mRenderer);
     }
 
-    private String getTableName() {
+    private void getParentDictionary() {
         Intent intent = getIntent();
-        SheetItem dictionary = intent.getParcelableExtra(Utils.DICTIONARY_OPEN_TAG);
-        return dictionary.getName();
+        mParentDictionary = intent.getParcelableExtra(Const.DICTIONARY_OPEN_TAG);
     }
 
     @Override
@@ -89,24 +91,44 @@ implements ItemsView,
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        Intent intent = new Intent(this, TranslateActivity.class);
-        intent.putExtra(Utils.TRANSLATE_MODE_TAG, Utils.TRANSLATE_ADD_TAG);
-        startActivityForResult(intent, Utils.TRANSLATE_ACTIVITY_REQUEST_ADD);
+        startTranslateActivity(Const.TRANSLATE_ADD_TAG, null);
         return super.onOptionsItemSelected(item);
+    }
+
+    private void startTranslateActivity(String modeTag, Item itemToEdit) {
+        Intent intent = new Intent(this, TranslateActivity.class);
+        intent.putExtra(Const.TRANSLATE_LANG_TAG, mParentDictionary);
+        intent.putExtra(Const.TRANSLATE_MODE_TAG, modeTag);
+
+        int requestCode;
+
+        switch (modeTag) {
+            case Const.TRANSLATE_EDIT_TAG:
+                requestCode = Const.TRANSLATE_ACTIVITY_REQUEST_EDIT;
+                intent.putExtra(Const.TRANSLATE_EDIT_TAG, itemToEdit);
+                break;
+
+            default:
+            case Const.TRANSLATE_ADD_TAG:
+                requestCode = Const.TRANSLATE_ACTIVITY_REQUEST_ADD;
+                break;
+        }
+
+        startActivityForResult(intent, requestCode);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if( resultCode == RESULT_OK ) {
+        if (resultCode == RESULT_OK) {
             switch (requestCode) {
-                case Utils.TRANSLATE_ACTIVITY_REQUEST_ADD:
-                    Item newItem = data.getParcelableExtra(Utils.TRANSLATE_RESULT_TAG);
+                case Const.TRANSLATE_ACTIVITY_REQUEST_ADD:
+                    Item newItem = data.getParcelableExtra(Const.TRANSLATE_RESULT_TAG);
                     mPresenter.insert(newItem);
                     break;
 
-                case Utils.TRANSLATE_ACTIVITY_REQUEST_EDIT:
-                    Item beforeEdit = data.getParcelableExtra(Utils.TRANSLATE_BEFORE_EDIT_TAG);
-                    Item afterEdit = data.getParcelableExtra(Utils.TRANSLATE_RESULT_TAG);
+                case Const.TRANSLATE_ACTIVITY_REQUEST_EDIT:
+                    Item beforeEdit = data.getParcelableExtra(Const.TRANSLATE_BEFORE_EDIT_TAG);
+                    Item afterEdit = data.getParcelableExtra(Const.TRANSLATE_RESULT_TAG);
                     mPresenter.update(beforeEdit, afterEdit);
                     break;
             }
@@ -116,10 +138,7 @@ implements ItemsView,
 
     @Override
     public void onItemClick(Item item) {
-        Intent intent = new Intent(this, TranslateActivity.class);
-        intent.putExtra(Utils.TRANSLATE_MODE_TAG, Utils.TRANSLATE_EDIT_TAG);
-        intent.putExtra(Utils.TRANSLATE_EDIT_TAG, item);
-        startActivityForResult(intent, Utils.TRANSLATE_ACTIVITY_REQUEST_EDIT);
+        startTranslateActivity(Const.TRANSLATE_EDIT_TAG, item);
     }
 
     @Override
@@ -129,27 +148,27 @@ implements ItemsView,
 
     @Override
     public void onGetItems(List<Item> data) {
-        renderer.setData( data );
-        renderer.notifyDataSetChanged();
+        mRenderer.setData(data);
+        mRenderer.notifyDataSetChanged();
     }
 
     @Override
     public void onError(Throwable e) {
-        Log.d(Utils.LOG_TAG, e.toString());
+        Log.d(Const.LOG_TAG, e.toString());
     }
 
     @Override
     public void onInsertComplete() {
-        Log.d(Utils.LOG_TAG, "onInsertComplete");
+        Log.d(Const.LOG_TAG, "onInsertComplete");
     }
 
     @Override
     public void onUpdateComplete() {
-        Log.d(Utils.LOG_TAG, "onUpdateComplete");
+        Log.d(Const.LOG_TAG, "onUpdateComplete");
     }
 
     @Override
     public void onDeleteComplete() {
-        Log.d(Utils.LOG_TAG, "onDeleteComplete");
+        Log.d(Const.LOG_TAG, "onDeleteComplete");
     }
 }
